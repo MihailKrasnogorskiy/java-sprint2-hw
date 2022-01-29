@@ -1,6 +1,14 @@
-import java.util.ArrayList;
+package model;
 
-// класс эпика
+import java.util.ArrayList;
+import java.util.Objects;
+
+/*
+Класс эпика. Данный класс не является логически "Задачей". Это, скорее, план достижения цели, который состоит из
+"Задач". Поэтому он не наследуется от класса model.Task. Так же не наследуясь, мы избегаем ситуации, когда у данного класса
+появляется метод setStatus(model.Status status), который позволяет менять статус Эпика. Его можно переопределить, чтобы он
+ничего не делал или выдавал сообщение об ошибке, но доступ к вызову метода всё равно останется.
+ */
 public class EpicTask {
 
     private String name;
@@ -75,12 +83,37 @@ public class EpicTask {
 
     @Override
     public String toString() {
-        return "EpicTask{" +
+        return "model.EpicTask{" +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", id=" + id +
                 ", status=" + status +
                 ", subTasks=" + subTasks +
                 '}';
+    }
+
+    public int hashCode() {
+        int hash = 23;
+        if (name != null) {
+            hash = hash + name.hashCode();
+        }
+        hash = hash * 31;
+        if (description != null) {
+            hash = hash + description.hashCode();
+        }
+        if (status != null) {
+            hash = hash + status.hashCode();
+        }
+        return hash + subTasks.hashCode() + id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof EpicTask)) return false;
+        EpicTask epicTask = (EpicTask) o;
+        return id == epicTask.id && Objects.equals(name, epicTask.name)
+                && Objects.equals(description, epicTask.description) && status == epicTask.status
+                && Objects.equals(subTasks, epicTask.subTasks);
     }
 }

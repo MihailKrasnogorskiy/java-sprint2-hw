@@ -1,3 +1,8 @@
+package controllers;
+
+import model.*;
+import date.TaskBase;
+
 import java.util.ArrayList;
 
 //менеджер задач
@@ -7,15 +12,17 @@ public class TaskManager {
 
     public void addTask(Object obj) {    // добавление(сохранение) задачи
         if (obj == null) return;
-        if (obj instanceof Task) {
-            id++;
-            ((Task) obj).setId(id);
-            taskBase.getTaskMap().put(id, (Task) obj);
-        }
         if (obj instanceof SubTask) {
             id++;
             ((SubTask) obj).setId(id);
             taskBase.getSubTaskMap().put(id, (SubTask) obj);
+            return;
+        }
+        if (obj instanceof Task) {
+            id++;
+            ((Task) obj).setId(id);
+            taskBase.getTaskMap().put(id, (Task) obj);
+            return;
         }
         if (obj instanceof EpicTask) {
             id++;
@@ -85,15 +92,17 @@ public class TaskManager {
 
     public void updateTask(int id, Object obj) {    // обновление задачи
         if (obj == null || id == 0) return;
-        if (obj instanceof Task) {
-            taskBase.getTaskMap().put(id, (Task) obj);
-        }
         if (obj instanceof SubTask) {
             taskBase.getSubTaskMap().put(id, (SubTask) obj);
             ((SubTask) obj).getEpic().checkStatus();
+            return;
         }
         if (obj instanceof EpicTask) {
             taskBase.getEpicTaskMap().put(id, (EpicTask) obj);
+            return;
+        }
+        if (obj instanceof Task) {
+            taskBase.getTaskMap().put(id, (Task) obj);
         }
     }
 
