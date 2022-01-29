@@ -1,12 +1,20 @@
-import java.util.HashMap;
+import java.util.ArrayList;
 
+// класс эпика
 public class EpicTask {
 
     private String name;
     private String description;
-    private Integer id;
-    private String status;
-    private HashMap<Integer, SubTask> subTasks;
+    private int id;
+    private Status status;
+    private ArrayList<SubTask> subTasks;
+
+    public EpicTask(String name, String description) {
+        this.name = name;
+        this.description = description;
+        subTasks = new ArrayList<>();
+        status = Status.NEW;
+    }
 
     public String getName() {
         return name;
@@ -24,20 +32,55 @@ public class EpicTask {
         this.description = description;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void checkStatus() {
-
+    public ArrayList<SubTask> getSubTasks() {
+        return subTasks;
     }
 
+    public void addSubTask(SubTask subTask) { // добавление подзадачи в эпик
+        subTasks.add(subTask);
+        checkStatus();
+    }
+
+    public void checkStatus() {   // проверка статуса эпика
+        if (subTasks.size() == 0) {
+            status = Status.NEW;
+        }
+        int counterNew = 0;
+        int counterDone = 0;
+        for (SubTask subTask : subTasks) {
+            if (subTask.getStatus() == Status.DONE) {
+                counterDone++;
+            } else if (subTask.getStatus() == Status.NEW) {
+                counterNew++;
+            }
+        }
+        if (counterDone == subTasks.size()) {
+            status = Status.DONE;
+        } else if (counterNew == subTasks.size()) {
+            status = Status.NEW;
+        } else status = Status.IN_PROGRESS;
+    }
+
+    @Override
+    public String toString() {
+        return "EpicTask{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", id=" + id +
+                ", status=" + status +
+                ", subTasks=" + subTasks +
+                '}';
+    }
 }

@@ -1,13 +1,20 @@
+import jdk.jshell.Snippet;
+
+// класс подзадачи
 public class SubTask {
 
     private String name;
     private String description;
-    private Integer id;
-    private String status;
+    private int id;
+    private Status status;
     private EpicTask epic;
 
-    public SubTask(EpicTask epic) {
+    public SubTask(String name, String description, EpicTask epic) {
+        this.name = name;
+        this.description = description;
         this.epic = epic;
+        status = Status.NEW;
+        this.epic.addSubTask(this);
     }
 
     public String getName() {
@@ -26,20 +33,34 @@ public class SubTask {
         this.description = description;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
         epic.checkStatus();
+    }
+
+    public EpicTask getEpic() {
+        return epic;
+    }
+
+    @Override
+    public String toString() {
+        return "SubTask{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", id=" + id +
+                ", status=" + status +
+                '}';
     }
 }
