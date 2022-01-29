@@ -1,20 +1,18 @@
-import jdk.jshell.Snippet;
+package model;
 
-// класс подзадачи
-public class SubTask {
+import java.util.Objects;
 
+// класс задачи
+public class Task {
     private String name;
     private String description;
     private int id;
     private Status status;
-    private EpicTask epic;
 
-    public SubTask(String name, String description, EpicTask epic) {
+    public Task(String name, String description) {
         this.name = name;
         this.description = description;
-        this.epic = epic;
         status = Status.NEW;
-        this.epic.addSubTask(this);
     }
 
     public String getName() {
@@ -47,16 +45,36 @@ public class SubTask {
 
     public void setStatus(Status status) {
         this.status = status;
-        epic.checkStatus();
     }
 
-    public EpicTask getEpic() {
-        return epic;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Task)) return false;
+        Task task = (Task) o;
+        return id == task.id && Objects.equals(name, task.name) && Objects.equals(description, task.description)
+                && status == task.status;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 23;
+        if (name != null) {
+            hash = hash + name.hashCode();
+        }
+        hash = hash * 31;
+        if (description != null) {
+            hash = hash + description.hashCode();
+        }
+        if (status != null) {
+            hash = hash + status.hashCode();
+        }
+        return hash + id;
     }
 
     @Override
     public String toString() {
-        return "SubTask{" +
+        return "model.Task{" +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", id=" + id +
