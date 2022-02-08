@@ -9,47 +9,14 @@ import java.util.Objects;
 появляется метод setStatus(model.Status status), который позволяет менять статус Эпика. Его можно переопределить, чтобы он
 ничего не делал или выдавал сообщение об ошибке, но доступ к вызову метода всё равно останется.
  */
-public class EpicTask {
+public class EpicTask extends TaskBase {
 
-    private String name;
-    private String description;
-    private int id;
-    private Status status;
     private ArrayList<SubTask> subTasks;
 
     public EpicTask(String name, String description) {
-        this.name = name;
-        this.description = description;
+        super(name, description);
         subTasks = new ArrayList<>();
         status = Status.NEW;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public Status getStatus() {
-        return status;
     }
 
     public ArrayList<SubTask> getSubTasks() {
@@ -92,6 +59,7 @@ public class EpicTask {
                 '}';
     }
 
+    @Override
     public int hashCode() {
         int hash = 23;
         if (name != null) {
