@@ -1,7 +1,5 @@
-import controllers.TaskManager;
+import controllers.inMemoryTaskManager;
 import model.*;
-
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -13,7 +11,7 @@ public class Main {
         SubTask subTask11 = new SubTask("подзадача 1.1", "что-то маленькое и лёгкое 1.1", epic1);
         SubTask subTask12 = new SubTask("подзадача 1.2", "что-то маленькое и лёгкое 1.2", epic1);
         SubTask subTask21 = new SubTask("подзадача 2.1", "что-то маленькое и лёгкое 2.1", epic2);
-        TaskManager manager = new TaskManager();
+        inMemoryTaskManager manager = new inMemoryTaskManager();
         // сохранение задач, подзадач и эпиков
         manager.addTask(task1);
         manager.addTask(task2);
