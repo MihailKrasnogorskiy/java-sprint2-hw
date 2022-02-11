@@ -1,112 +1,55 @@
 package controllers;
 
-import model.*;
-import date.TaskBase;
+import model.EpicTask;
+import model.SubTask;
+import model.Task;
+import model.TaskBase;
 
 import java.util.ArrayList;
+import java.util.List;
 
-//менеджер задач
-public class TaskManager {
-    private TaskBase taskBase = new TaskBase();
-    private int id;
+// интерфейс менеджер задач
+public interface TaskManager {
+    // добавление(сохранение) задачи
+    void addTask(TaskBase task);
 
-    public void addTask(Object obj) {    // добавление(сохранение) задачи
-        if (obj == null) return;
-        if (obj instanceof SubTask) {
-            id++;
-            ((SubTask) obj).setId(id);
-            taskBase.getSubTaskMap().put(id, (SubTask) obj);
-            return;
-        }
-        if (obj instanceof Task) {
-            id++;
-            ((Task) obj).setId(id);
-            taskBase.getTaskMap().put(id, (Task) obj);
-            return;
-        }
-        if (obj instanceof EpicTask) {
-            id++;
-            ((EpicTask) obj).setId(id);
-            taskBase.getEpicTaskMap().put(id, (EpicTask) obj);
-        }
-    }
+    // возвращение задачи по идентификатору
+    Task getTaskById(int id);
 
-    public Task getTaskById(int id) {        // возвращение задачи по идентификатору
-        if (taskBase.getTaskMap().containsKey(id)) {
-            return taskBase.getTaskMap().get(id);
-        }
-        return null;
-    }
+    // возвращение подзадачи по идентификатору
+    SubTask getSubTaskById(int id);
 
-    public SubTask getSubTaskById(int id) {   // возвращение подзадачи по идентификатору
-        if (taskBase.getSubTaskMap().containsKey(id)) {
-            return taskBase.getSubTaskMap().get(id);
-        }
-        return null;
-    }
+    // возвращение эпика по идентификатору
+    EpicTask getEpicTaskById(int id);
 
-    public EpicTask getEpicTaskById(int id) {    // возвращение эпика по идентификатору
-        if (taskBase.getEpicTaskMap().containsKey(id)) {
-            return taskBase.getEpicTaskMap().get(id);
-        }
-        return null;
-    }
+    // удаление всех задач
+    void removeAllTask();
 
-    public void removeAllTask() {      // удаление всех задач
-        taskBase.getTaskMap().clear();
-    }
+    // удаление всех эпиков
+    void removeAllEpic();
 
-    public void removeAllEpic() {     // удаление всех эпиков
-        taskBase.getEpicTaskMap().clear();
-        taskBase.getSubTaskMap().clear();
-    }
+    // удаление всех подзадач
+    void removeAllSubTask();
 
-    public void removeAllSubTask() {    // удаление всех подзадач
-        taskBase.getSubTaskMap().clear();
-    }
+    // возвращение списка всех подзадач
+    ArrayList<SubTask> getAllSubTask();
 
-    public ArrayList<SubTask> getAllSubTask() {   // возвращение списка всех подзадач
-        return new ArrayList<>(taskBase.getSubTaskMap().values());
-    }
+    // возвращение списка всех задач
+    ArrayList<Task> getAllTask();
 
-    public ArrayList<Task> getAllTask() {    // возвращение списка всех задач
-        return new ArrayList<>(taskBase.getTaskMap().values());
-    }
+    // возвращение списка всех эпиков
+    ArrayList<EpicTask> getAllEpicTask();
 
-    public ArrayList<EpicTask> getAllEpicTask() {    // возвращение списка всех эпиков
-        return new ArrayList<>(taskBase.getEpicTaskMap().values());
-    }
+    // удаление задачи по идентификатору
+    void removeById(int id);
 
-    public void removeById(int id) {    // удаление задачи по идентификатору
-        if (taskBase.getTaskMap().containsKey(id)) {
-            taskBase.getTaskMap().remove(id);
-        } else if (taskBase.getSubTaskMap().containsKey(id)) {
-            taskBase.getSubTaskMap().remove(id);
-        } else if (taskBase.getEpicTaskMap().containsKey(id)) {
-            for (SubTask subTask : taskBase.getEpicTaskMap().get(id).getSubTasks()) {
-                taskBase.getSubTaskMap().remove(subTask.getId());
-            }
-            taskBase.getEpicTaskMap().remove(id);
-        } else System.out.println("Данный id не найден");
-    }
+    // обновление задачи
+    void updateTask(int id, TaskBase Task);
 
-    public void updateTask(int id, Object obj) {    // обновление задачи
-        if (obj == null || id == 0) return;
-        if (obj instanceof SubTask) {
-            taskBase.getSubTaskMap().put(id, (SubTask) obj);
-            ((SubTask) obj).getEpic().checkStatus();
-            return;
-        }
-        if (obj instanceof EpicTask) {
-            taskBase.getEpicTaskMap().put(id, (EpicTask) obj);
-            return;
-        }
-        if (obj instanceof Task) {
-            taskBase.getTaskMap().put(id, (Task) obj);
-        }
-    }
+    // возвращение списка всех подзадач конкретного эпика
+    ArrayList<SubTask> getSubTaskFromEpic(EpicTask epicTask);
 
-    public ArrayList<SubTask> getSubTaskFromEpic(EpicTask epicTask) {  //возвращение всех подзадач эпика
-        return epicTask.getSubTasks();
-    }
+    // возвращение истории просмотра
+    List<TaskBase> history();
+
 }
