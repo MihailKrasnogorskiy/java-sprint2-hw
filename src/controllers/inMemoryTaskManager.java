@@ -115,7 +115,7 @@ public class inMemoryTaskManager implements TaskManager {
         if (Task == null || id == 0) return;
         if (Task instanceof SubTask) {
             taskDate.getSubTaskMap().put(id, (SubTask) Task);
-            ((SubTask) Task).getEpic().checkStatus();
+            ((SubTask) Task).getEpic().getStatus();
             return;
         }
         if (Task instanceof EpicTask) {

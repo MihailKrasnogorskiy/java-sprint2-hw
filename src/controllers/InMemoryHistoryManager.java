@@ -5,6 +5,8 @@ import model.TaskBase;
 import java.util.ArrayList;
 import java.util.List;
 //реализация класса менеджер истории
+
+// Вывод в консоль убрал, добавлял для тестирования и потом решил оставить.
 public class InMemoryHistoryManager implements HistoryTaskManager {
     private final List<TaskBase> historyList = new ArrayList<>();
     public static final int MAX_HISTORY_SIZE = 10;
@@ -14,10 +16,8 @@ public class InMemoryHistoryManager implements HistoryTaskManager {
     public void addTask(TaskBase task) {
         if (historyList.size() == MAX_HISTORY_SIZE) {
             historyList.remove(OLDEST_HISTORY_INDEX);
-            System.out.println("Удалена самая старая задача в истории просмотра");
         }
         historyList.add(task);
-        System.out.println("В историю просмотра добавлена задача. Номер в истории просмотра " + historyList.size());
     }
 
     @Override
@@ -30,7 +30,6 @@ public class InMemoryHistoryManager implements HistoryTaskManager {
         for (int i = copyHistoryList.size() - 1; i >= 0; i--) {
             if (copyHistoryList.get(i).equals(task)) {
                 historyList.remove(i);
-                System.out.println("Из истории просмотра удалена задача " + task);
             }
         }
     }
