@@ -1,5 +1,6 @@
 package model;
 
+// абстрактный класс задачи
 public abstract class TaskBase {
     String name;
     String description;

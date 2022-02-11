@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 // класс для хранения задач
 public class TaskDate {
+
     private HashMap<Integer, Task> taskMap = new HashMap<>();
     private HashMap<Integer, SubTask> subTaskMap = new HashMap<>();
     private HashMap<Integer, EpicTask> epicTaskMap = new HashMap<>();
