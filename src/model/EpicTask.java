@@ -20,10 +20,11 @@ public class EpicTask extends TaskBase {
 
     public void addSubTask(SubTask subTask) { // добавление подзадачи в эпик
         subTasks.add(subTask);
-        checkStatus();
+        getStatus();
     }
 
-    public void checkStatus() {   // проверка статуса эпика
+    @Override
+    public Status getStatus() {   // проверка и возвращение статуса эпика
         if (subTasks.size() == 0) {
             status = Status.NEW;
         }
@@ -41,6 +42,7 @@ public class EpicTask extends TaskBase {
         } else if (counterNew == subTasks.size()) {
             status = Status.NEW;
         } else status = Status.IN_PROGRESS;
+        return status;
     }
 
     @Override
