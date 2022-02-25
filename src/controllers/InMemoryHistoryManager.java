@@ -1,35 +1,90 @@
 package controllers;
 
+import date.Node;
 import model.TaskBase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 //реализация класса менеджер истории
 
-// Вывод в консоль убрал, добавлял для тестирования и потом решил оставить.
+
 public class InMemoryHistoryManager implements HistoryTaskManager {
-    private final List<TaskBase> historyList = new ArrayList<>();
-    public static final int MAX_HISTORY_SIZE = 10;
-    public static final int OLDEST_HISTORY_INDEX = 0;
+    private LinkedList<TaskBase> historyList = new LinkedList<>();
+    private HashMap<Integer, Node> listMap = new HashMap<>();
+
 
     @Override
     public void addTask(TaskBase task) {
-        if (historyList.size() == MAX_HISTORY_SIZE) {
-            historyList.remove(OLDEST_HISTORY_INDEX);
+        if (listMap.containsKey(task.getId())) {
+            removeTaskInHistory(task);
         }
-        historyList.add(task);
+        historyList.add(task, task.getId());
     }
 
     @Override
     public List<TaskBase> getHistory() {
-        return historyList;
+        return historyList.getTasks();
     }
 
     public void removeTaskInHistory(TaskBase task) {
-        List<TaskBase> copyHistoryList = new ArrayList<>(historyList);
-        for (int i = copyHistoryList.size() - 1; i >= 0; i--) {
-            if (copyHistoryList.get(i).equals(task)) {
-                historyList.remove(i);
+        historyList.removeNode(listMap.get(task.getId()));
+        listMap.remove(task.getId());
+    }
+
+    // класс списка для хранения истории просмотра
+    class LinkedList<TaskBase> {
+        private Node<TaskBase> head;
+        private Node<TaskBase> tail;
+
+        //добавление в список
+        private void add(TaskBase task, int id) {
+
+            Node<TaskBase> newNode = new Node<>(task);
+            listMap.put(id, newNode);
+            if (head == null) {
+                head = newNode;
+            } else {
+                tail.setNext(newNode);
+                newNode.setPrev(tail);
+            }
+            tail = newNode;
+        }
+
+        //возвращение истории просмотра
+        private List<TaskBase> getTasks() {
+            List<TaskBase> tasks = new ArrayList<>();
+            Node<TaskBase> node = null;
+            for (int i = 0; i < listMap.size(); i++) {
+                if (i == 0) {
+                    tasks.add(head.getDate());
+                    node = head.getNext();
+                } else {
+                    tasks.add(node.getDate());
+                    node = node.getNext();
+                }
+            }
+            return tasks;
+        }
+
+        //удаление из списка
+        private void removeNode(Node node) {
+            if (node == null) {
+                return;
+            }
+            if (node == head) {
+                if (head.getNext() != null) {
+                    head.getNext().setPrev(null);
+                    head = head.getNext();
+                } else {
+                    head = null;
+                }
+            } else if (node == tail) {
+                tail.getPrev().setNext(null);
+                tail = tail.getPrev();
+            } else {
+                node.getPrev().setNext(node.getNext());
+                node.getNext().setPrev(node.getPrev());
             }
         }
     }
