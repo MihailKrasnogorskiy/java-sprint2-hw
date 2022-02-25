@@ -12,7 +12,7 @@ public class Main {
         EpicTask epic2 = new EpicTask("эпик 2", "что-то большое сложное 2");
         SubTask subTask11 = new SubTask("подзадача 1.1", "что-то маленькое и лёгкое 1.1", epic1);
         SubTask subTask12 = new SubTask("подзадача 1.2", "что-то маленькое и лёгкое 1.2", epic1);
-        SubTask subTask21 = new SubTask("подзадача 2.1", "что-то маленькое и лёгкое 2.1", epic2);
+        SubTask subTask13 = new SubTask("подзадача 1.3", "что-то маленькое и лёгкое 1.2", epic1);
         TaskManager manager = Managers.getDefaultTaskManager();
         // сохранение задач, подзадач и эпиков
         manager.addTask(task1);
@@ -21,37 +21,38 @@ public class Main {
         manager.addTask(epic2);
         manager.addTask(subTask11);
         manager.addTask(subTask12);
-        manager.addTask(subTask21);
-        System.out.println(manager.getAllTask());
-        System.out.println(manager.getAllEpicTask());
+        manager.addTask(subTask13);
         //получаем задачи для записи в историю и выводим историю
+        manager.getTaskById(1);
         manager.getTaskById(2);
-        System.out.println("История " + manager.history());
         manager.getEpicTaskById(3);
+        manager.getEpicTaskById(4);
+        manager.getSubTaskById(5);
+        manager.getSubTaskById(7);
+        System.out.println("История " + manager.history());
         for (int i = 0; i <= 6; i++) {
             manager.getSubTaskById(6);
         }
         System.out.println("История " + manager.history());
-        manager.getSubTaskById(7);
-        manager.getTaskById(1);
+        manager.getTaskById(2);
+        manager.getSubTaskById(5);
         System.out.println("История " + manager.history());
-        // изменяем статусы задачи и подзадач
-        task1.setStatus(Status.DONE);
-        subTask12.setStatus(Status.DONE);
-        subTask21.setStatus(Status.IN_PROGRESS);
-        // обновляем в менеджере
-        manager.updateTask(task1.getId(), task1);
-        manager.updateTask(subTask12.getId(), subTask12);
-        manager.updateTask(subTask21.getId(), subTask21);
-        System.out.println("Список всех задач " + manager.getAllTask());
-        System.out.println("Список всех эпиков " + manager.getAllEpicTask());
-        // удаление задачи и эпика по id
-        manager.removeById(task2.getId());
-        manager.removeById(epic1.getId());
-        System.out.println("Список всех задач " + manager.getAllTask());
-        System.out.println("Список всех эпиков " + manager.getAllEpicTask());
-        System.out.println("Список всех подзадач " + manager.getAllSubTask());
-        //выводим историю
+        manager.removeById(1);
+        System.out.println("История " + manager.history());
+        manager.removeById(3);
+        System.out.println("История " + manager.history());
+        manager.removeAllTask();
+        System.out.println("История " + manager.history());
+        manager.addTask(epic1);
+        manager.addTask(subTask11);
+        manager.addTask(subTask12);
+        manager.addTask(subTask13);
+        manager.getEpicTaskById(8);
+        manager.getSubTaskById(9);
+        manager.getSubTaskById(10);
+        manager.getSubTaskById(11);
+        System.out.println("История " + manager.history());
+        manager.removeAllEpic();
         System.out.println("История " + manager.history());
     }
 }
