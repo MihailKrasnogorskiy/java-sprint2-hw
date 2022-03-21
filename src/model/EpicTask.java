@@ -45,15 +45,8 @@ public class EpicTask extends TaskBase {
         return status;
     }
 
-    @Override
     public String toString() {
-        return "model.EpicTask{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", id=" + id +
-                ", status=" + status +
-                ", subTasks=" + subTasks +
-                '}';
+        return id + "," + TaskType.EPIC + "," + name + "," + status + "," + description;
     }
 
     @Override

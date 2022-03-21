@@ -144,4 +144,8 @@ public class inMemoryTaskManager implements TaskManager {
     public List<TaskBase> history() {
         return inMemoryHistoryManager.getHistory();
     }
+
+    public TaskDate getTaskDate() {
+        return taskDate;
+    }
 }

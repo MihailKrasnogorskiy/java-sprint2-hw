@@ -34,4 +34,8 @@ public class SubTask extends TaskBase {
                 && Objects.equals(description, subTask.description) && status == subTask.status
                 && epic.equals(subTask.epic);
     }
+
+    public String toString() {
+        return id + "," + TaskType.SUBTASK + "," + name + "," + status + "," + description + "," + epic.getId();
+    }
 }
