@@ -1,9 +1,11 @@
 package controllers;
 
+import model.SubTask;
 import model.TaskBase;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class FileBackedTasksManager extends inMemoryTaskManager {
@@ -40,8 +42,8 @@ public class FileBackedTasksManager extends inMemoryTaskManager {
     }
 
     @Override
-    public void updateTask(int id, TaskBase Task) {
-        super.updateTask(id, Task);
+    public void updateTask(int id, TaskBase task) {
+        super.updateTask(id, task);
         save();
     }
 
@@ -49,16 +51,26 @@ public class FileBackedTasksManager extends inMemoryTaskManager {
         List<TaskBase> list = new ArrayList<>(getAllSubTask());
         list.addAll(getAllTask());
         list.addAll(getAllEpicTask());
+        list.sort(new Comparator<TaskBase>() {
+            @Override
+            public int compare(TaskBase o1, TaskBase o2) {
+                return o1.getId() - o2.getId();
+            }
+        });
         try {
             FileWriter fr = new FileWriter(file);
             BufferedWriter br = new BufferedWriter(fr);
             for (TaskBase task : list) {
-                br.write(task.toString() + "\n");
+                if (task instanceof SubTask) {
+                    br.write(((SubTask) task).toString() + "\n");
+                } else {
+                    br.write(task.toString() + "\n");
+                }
             }
             br.write("\n");
             list.clear();
             list.addAll(history());
-            for(TaskBase task : list){
+            for (TaskBase task : list) {
                 br.write(task.getId() + ",");
             }
         } catch (IOException e) {

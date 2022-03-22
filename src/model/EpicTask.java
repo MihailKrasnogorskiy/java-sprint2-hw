@@ -45,10 +45,6 @@ public class EpicTask extends TaskBase {
         return status;
     }
 
-    public String toString() {
-        return id + "," + TaskType.EPIC + "," + name + "," + status + "," + description;
-    }
-
     @Override
     public int hashCode() {
         int hash = 23;

@@ -21,8 +21,4 @@ public class Task extends TaskBase {
         return id == task.id && Objects.equals(name, task.name) && Objects.equals(description, task.description)
                 && status == task.status;
     }
-
-    public String toString() {
-        return id + "," + TaskType.TASK + "," + name + "," + status + "," + description;
-    }
 }

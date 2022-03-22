@@ -1,7 +1,9 @@
 package model;
 
+import java.util.Comparator;
+
 // абстрактный класс задачи
-public abstract class TaskBase {
+public abstract class TaskBase implements Comparable{
     String name;
     String description;
     int id;
@@ -56,4 +58,9 @@ public abstract class TaskBase {
         }
         return hash + id;
     }
+
+    public String toString() {
+        return id + "," + TaskType.TASK + "," + name + "," + status + "," + description;
+    }
+
 }

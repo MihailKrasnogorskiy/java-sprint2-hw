@@ -120,19 +120,19 @@ public class inMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateTask(int id, TaskBase Task) {
-        if (Task == null || id == 0) return;
-        if (Task instanceof SubTask) {
-            taskDate.getSubTaskMap().put(id, (SubTask) Task);
-            ((SubTask) Task).getEpic().getStatus();
+    public void updateTask(int id, TaskBase task) {
+        if (task == null || id == 0) return;
+        if (task instanceof SubTask) {
+            taskDate.getSubTaskMap().put(id, (SubTask) task);
+            ((SubTask) task).getEpic().getStatus();
             return;
         }
-        if (Task instanceof EpicTask) {
-            taskDate.getEpicTaskMap().put(id, (EpicTask) Task);
+        if (task instanceof EpicTask) {
+            taskDate.getEpicTaskMap().put(id, (EpicTask) task);
             return;
         }
-        if (Task instanceof Task) {
-            taskDate.getTaskMap().put(id, (Task) Task);
+        if (task instanceof Task) {
+            taskDate.getTaskMap().put(id, (Task) task);
         }
     }
 
@@ -143,9 +143,5 @@ public class inMemoryTaskManager implements TaskManager {
 
     public List<TaskBase> history() {
         return inMemoryHistoryManager.getHistory();
-    }
-
-    public TaskDate getTaskDate() {
-        return taskDate;
     }
 }
