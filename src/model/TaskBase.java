@@ -3,7 +3,7 @@ package model;
 import java.util.Comparator;
 
 // абстрактный класс задачи
-public abstract class TaskBase implements Comparable{
+public abstract class TaskBase {
     String name;
     String description;
     int id;
@@ -13,6 +13,13 @@ public abstract class TaskBase implements Comparable{
         this.name = name;
         this.description = description;
         status = Status.NEW;
+    }
+
+    public TaskBase(String name, String description, int id, Status status) {
+        this.name = name;
+        this.description = description;
+        this.id = id;
+        this.status = status;
     }
 
     public String getName() {

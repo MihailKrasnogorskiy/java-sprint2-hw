@@ -1,15 +1,20 @@
 package controllers;
 
-import model.SubTask;
-import model.TaskBase;
+import model.*;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Scanner;
 
 public class FileBackedTasksManager extends inMemoryTaskManager {
     private File file;
+
+    public FileBackedTasksManager(File file) {
+        super();
+        this.file = file;
+    }
 
     @Override
     public void addTask(TaskBase task) {
@@ -60,12 +65,9 @@ public class FileBackedTasksManager extends inMemoryTaskManager {
         try {
             FileWriter fr = new FileWriter(file);
             BufferedWriter br = new BufferedWriter(fr);
+            br.write("id,type,name,status,description,epic\n");
             for (TaskBase task : list) {
-                if (task instanceof SubTask) {
-                    br.write(((SubTask) task).toString() + "\n");
-                } else {
-                    br.write(task.toString() + "\n");
-                }
+                br.write(task.toString() + "\n");
             }
             br.write("\n");
             list.clear();
@@ -73,8 +75,52 @@ public class FileBackedTasksManager extends inMemoryTaskManager {
             for (TaskBase task : list) {
                 br.write(task.getId() + ",");
             }
+            br.flush();
         } catch (IOException e) {
             // Todo писать выброс исключения
         }
+    }
+
+    private static TaskBase fromString(String value) {
+        String[] split = value.split(",");
+        if (split[1].equals(TaskType.TASK.toString())) {
+            return new Task(split[2], split[4], Integer.parseInt(split[0]), statusFromString(split[3]));
+        } else if (split[1].equals(TaskType.EPIC.toString())) {
+            return new EpicTask(split[2], split[4], Integer.parseInt(split[0]), statusFromString(split[3]));
+        } else return new SubTask(split[2], split[4], Integer.parseInt(split[0]),
+                statusFromString(split[3]), Integer.parseInt(split[5]));
+    }
+
+    private static Status statusFromString(String value) {
+        if (value.equals(Status.NEW.toString())) {
+            return Status.NEW;
+        } else if (value.equals(Status.IN_PROGRESS.toString())) {
+            return Status.IN_PROGRESS;
+        } else {
+            return Status.DONE;
+        }
+    }
+
+    public static FileBackedTasksManager loadFromFile(File file) {
+        FileBackedTasksManager manager = new FileBackedTasksManager(file);
+        try {
+            Scanner scanner = new Scanner(file);
+            scanner.next();
+            while (scanner.hasNext()) {
+                if (scanner.next() != null) {
+                    manager.addTask(fromString(scanner.next()));
+                    continue;
+                } else {
+                    scanner.next();
+                    String[] splitLine = scanner.next().split(",");
+                    for(String s:splitLine){
+                        manager.getTaskById(Integer.parseInt(s));
+                    }
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return manager;
     }
 }

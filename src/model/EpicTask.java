@@ -14,6 +14,10 @@ public class EpicTask extends TaskBase {
         status = Status.NEW;
     }
 
+    public EpicTask(String name, String description, int id, Status status) {
+        super(name, description, id, status);
+    }
+
     public ArrayList<SubTask> getSubTasks() {
         return subTasks;
     }

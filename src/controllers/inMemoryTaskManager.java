@@ -19,6 +19,7 @@ public class inMemoryTaskManager implements TaskManager {
             id++;
             task.setId(id);
             taskDate.getSubTaskMap().put(id, (SubTask) task);
+            taskDate.getEpicTaskMap().get(id).addSubTask((SubTask) task);
             return;
         }
         if (task instanceof Task) {
@@ -124,7 +125,7 @@ public class inMemoryTaskManager implements TaskManager {
         if (task == null || id == 0) return;
         if (task instanceof SubTask) {
             taskDate.getSubTaskMap().put(id, (SubTask) task);
-            ((SubTask) task).getEpic().getStatus();
+            taskDate.getEpicTaskMap().get(((SubTask) task).getEpic()).getStatus();
             return;
         }
         if (task instanceof EpicTask) {

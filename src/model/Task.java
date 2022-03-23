@@ -9,6 +9,10 @@ public class Task extends TaskBase {
         super(name, description);
     }
 
+    public Task(String name, String description, int id, Status status) {
+        super(name, description, id, status);
+    }
+
     public void setStatus(Status status) {
         this.status = status;
     }
