@@ -12,6 +12,14 @@ public class inMemoryTaskManager implements TaskManager {
     private final HistoryTaskManager inMemoryHistoryManager = Managers.getDefaultHistory();
     private int id;
 
+    public TaskDate getTaskDate() {
+        return taskDate;
+    }
+
+    public HistoryTaskManager getInMemoryHistoryManager() {
+        return inMemoryHistoryManager;
+    }
+
     @Override
     public void addTask(TaskBase task) {
         if (task == null) return;
@@ -19,7 +27,7 @@ public class inMemoryTaskManager implements TaskManager {
             id++;
             task.setId(id);
             taskDate.getSubTaskMap().put(id, (SubTask) task);
-            taskDate.getEpicTaskMap().get(id).addSubTask((SubTask) task);
+            taskDate.getEpicTaskMap().get(((SubTask) task).getEpic()).addSubTask((SubTask) task);
             return;
         }
         if (task instanceof Task) {

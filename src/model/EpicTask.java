@@ -16,6 +16,7 @@ public class EpicTask extends TaskBase {
 
     public EpicTask(String name, String description, int id, Status status) {
         super(name, description, id, status);
+        subTasks = new ArrayList<>();
     }
 
     public ArrayList<SubTask> getSubTasks() {
@@ -73,5 +74,10 @@ public class EpicTask extends TaskBase {
         return id == epicTask.id && Objects.equals(name, epicTask.name)
                 && Objects.equals(description, epicTask.description) && status == epicTask.status
                 && Objects.equals(subTasks, epicTask.subTasks);
+    }
+
+    @Override
+    public String toString() {
+        return id + "," + TaskType.EPIC + "," + name + "," + status + "," + description;
     }
 }

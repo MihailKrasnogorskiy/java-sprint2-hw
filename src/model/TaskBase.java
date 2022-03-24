@@ -65,9 +65,4 @@ public abstract class TaskBase {
         }
         return hash + id;
     }
-
-    public String toString() {
-        return id + "," + TaskType.TASK + "," + name + "," + status + "," + description;
-    }
-
 }

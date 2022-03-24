@@ -4,7 +4,6 @@ import model.*;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -52,16 +51,62 @@ public class FileBackedTasksManager extends inMemoryTaskManager {
         save();
     }
 
+    @Override
+    public Task getTaskById(int id) {
+        Task task = super.getTaskById(id);
+        save();
+        return task;
+    }
+
+    @Override
+    public SubTask getSubTaskById(int id) {
+        SubTask subTask = super.getSubTaskById(id);
+        save();
+        return subTask;
+    }
+
+    @Override
+    public EpicTask getEpicTaskById(int id) {
+        EpicTask epicTask = super.getEpicTaskById(id);
+        save();
+        return epicTask;
+    }
+
+    public TaskBase restoreTasksInHistoryById(int id) {
+        if (getTaskDate().getTaskMap().containsKey(id)) {
+            getInMemoryHistoryManager().addTask(getTaskDate().getTaskMap().get(id));
+            return getTaskDate().getTaskMap().get(id);
+        } else if (getTaskDate().getSubTaskMap().containsKey(id)) {
+            getInMemoryHistoryManager().addTask(getTaskDate().getSubTaskMap().get(id));
+            return getTaskDate().getSubTaskMap().get(id);
+        } else if (getTaskDate().getEpicTaskMap().containsKey(id)) {
+            getInMemoryHistoryManager().addTask(getTaskDate().getEpicTaskMap().get(id));
+            return getTaskDate().getEpicTaskMap().get(id);
+        }
+        return null;
+    }
+
+    public void restoreTask(TaskBase task) {
+        if (task == null) return;
+        if (task instanceof SubTask) {
+            getTaskDate().getSubTaskMap().put(task.getId(), (SubTask) task);
+            System.out.println(getTaskDate().getEpicTaskMap().get(((SubTask) task).getEpic()).getSubTasks());
+            getTaskDate().getEpicTaskMap().get(((SubTask) task).getEpic()).addSubTask((SubTask) task);
+            return;
+        }
+        if (task instanceof Task) {
+            getTaskDate().getTaskMap().put(task.getId(), (Task) task);
+            return;
+        }
+        if (task instanceof EpicTask) {
+            getTaskDate().getEpicTaskMap().put(task.getId(), (EpicTask) task);
+        }
+    }
+
     private void save() {
-        List<TaskBase> list = new ArrayList<>(getAllSubTask());
+        List<TaskBase> list = new ArrayList<>(getAllEpicTask());
         list.addAll(getAllTask());
-        list.addAll(getAllEpicTask());
-        list.sort(new Comparator<TaskBase>() {
-            @Override
-            public int compare(TaskBase o1, TaskBase o2) {
-                return o1.getId() - o2.getId();
-            }
-        });
+        list.addAll(getAllSubTask());
         try {
             FileWriter fr = new FileWriter(file);
             BufferedWriter br = new BufferedWriter(fr);
@@ -70,9 +115,8 @@ public class FileBackedTasksManager extends inMemoryTaskManager {
                 br.write(task.toString() + "\n");
             }
             br.write("\n");
-            list.clear();
-            list.addAll(history());
-            for (TaskBase task : list) {
+            System.out.println("Лист " + history());
+            for (TaskBase task : history()) {
                 br.write(task.getId() + ",");
             }
             br.flush();
@@ -105,21 +149,21 @@ public class FileBackedTasksManager extends inMemoryTaskManager {
         FileBackedTasksManager manager = new FileBackedTasksManager(file);
         try {
             Scanner scanner = new Scanner(file);
-            scanner.next();
+            scanner.nextLine();
             while (scanner.hasNext()) {
-                if (scanner.next() != null) {
-                    manager.addTask(fromString(scanner.next()));
+                String line = scanner.nextLine();
+                if (!line.equals("")) {
+                    manager.restoreTask(fromString(line));
                     continue;
                 } else {
-                    scanner.next();
-                    String[] splitLine = scanner.next().split(",");
-                    for(String s:splitLine){
-                        manager.getTaskById(Integer.parseInt(s));
+                    String[] splitLine = scanner.nextLine().split(",");
+                    for (String s : splitLine) {
+                        manager.restoreTasksInHistoryById(Integer.parseInt(s));
                     }
                 }
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("Файл не найден");
         }
         return manager;
     }

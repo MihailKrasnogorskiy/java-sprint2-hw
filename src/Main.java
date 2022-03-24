@@ -1,5 +1,4 @@
 import controllers.FileBackedTasksManager;
-import controllers.Managers;
 import controllers.TaskManager;
 
 import model.*;
@@ -8,22 +7,25 @@ import java.io.File;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println(  "TASK".equals(TaskType.TASK.toString()));
+        System.out.println("TASK".equals(TaskType.TASK.toString()));
+
+        File file = new File("src/date/condition.csv");
+       // TaskManager manager = new FileBackedTasksManager(file);
+        TaskManager manager = FileBackedTasksManager.loadFromFile(file);
         // создание объектов задач, подзадач, эпиков и менеджера
 //        Task task1 = new Task("Задача 1", "тестирование кода 1");
 //        Task task2 = new Task("Задача 2", "тестирование кода 2");
 //        EpicTask epic1 = new EpicTask("эпик 1", "что-то большое сложное 1");
 //        EpicTask epic2 = new EpicTask("эпик 2", "что-то большое сложное 2");
-//        SubTask subTask11 = new SubTask("подзадача 1.1", "что-то маленькое и лёгкое 1.1", epic1);
-//        SubTask subTask12 = new SubTask("подзадача 1.2", "что-то маленькое и лёгкое 1.2", epic1);
-//        SubTask subTask13 = new SubTask("подзадача 1.3", "что-то маленькое и лёгкое 1.2", epic1);
-//        File file = new File("src/date/condition.csv");
-//        TaskManager manager = new FileBackedTasksManager(file);
-//        // сохранение задач, подзадач и эпиков
 //        manager.addTask(task1);
 //        manager.addTask(task2);
 //        manager.addTask(epic1);
 //        manager.addTask(epic2);
+//        SubTask subTask11 = new SubTask("подзадача 1.1", "что-то маленькое и лёгкое 1.1", epic1.getId());
+//        SubTask subTask12 = new SubTask("подзадача 1.2", "что-то маленькое и лёгкое 1.2", epic1.getId());
+//        SubTask subTask13 = new SubTask("подзадача 1.3", "что-то маленькое и лёгкое 1.2", epic1.getId());
+//
+//        // сохранение задач, подзадач и эпиков
 //        manager.addTask(subTask11);
 //        manager.addTask(subTask12);
 //        manager.addTask(subTask13);
@@ -48,16 +50,20 @@ public class Main {
 //        System.out.println("История " + manager.history());
 //        manager.removeAllTask();
 //        System.out.println("История " + manager.history());
-//        manager.addTask(epic1);
-//        manager.addTask(subTask11);
-//        manager.addTask(subTask12);
-//        manager.addTask(subTask13);
+//        EpicTask epic3 = new EpicTask("эпик 1", "что-то большое сложное 1");
+//        manager.addTask(epic3);
+//        SubTask subTask31 = new SubTask("подзадача 1.1", "что-то маленькое и лёгкое 1.1", epic3.getId());
+//        SubTask subTask32 = new SubTask("подзадача 1.2", "что-то маленькое и лёгкое 1.2", epic3.getId());
+//        SubTask subTask33 = new SubTask("подзадача 1.3", "что-то маленькое и лёгкое 1.2", epic3.getId());
+//        manager.addTask(subTask31);
+//        manager.addTask(subTask32);
+//        manager.addTask(subTask33);
 //        manager.getEpicTaskById(8);
 //        manager.getSubTaskById(9);
 //        manager.getSubTaskById(10);
 //        manager.getSubTaskById(11);
 //        System.out.println("История " + manager.history());
-//      //  manager.removeAllEpic();
-//        System.out.println("История " + manager.history());
+//        //  manager.removeAllEpic();
+ System.out.println("История " + manager.history());
     }
 }
