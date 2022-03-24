@@ -1,13 +1,16 @@
 package controllers;
 
-import model.*;
 import date.TaskDate;
+import model.EpicTask;
+import model.SubTask;
+import model.Task;
+import model.TaskBase;
 
 import java.util.ArrayList;
 import java.util.List;
 
 //реализация класса менеджер задач
-public class inMemoryTaskManager implements TaskManager {
+public class InMemoryTaskManager implements TaskManager {
     private final TaskDate taskDate = new TaskDate();
     private final HistoryTaskManager inMemoryHistoryManager = Managers.getDefaultHistory();
     private int id;
