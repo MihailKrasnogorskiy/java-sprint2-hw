@@ -14,6 +14,11 @@ public class EpicTask extends TaskBase {
         status = Status.NEW;
     }
 
+    public EpicTask(String name, String description, int id, Status status) {
+        super(name, description, id, status);
+        subTasks = new ArrayList<>();
+    }
+
     public ArrayList<SubTask> getSubTasks() {
         return subTasks;
     }
@@ -46,17 +51,6 @@ public class EpicTask extends TaskBase {
     }
 
     @Override
-    public String toString() {
-        return "model.EpicTask{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", id=" + id +
-                ", status=" + status +
-                ", subTasks=" + subTasks +
-                '}';
-    }
-
-    @Override
     public int hashCode() {
         int hash = 23;
         if (name != null) {
@@ -80,5 +74,10 @@ public class EpicTask extends TaskBase {
         return id == epicTask.id && Objects.equals(name, epicTask.name)
                 && Objects.equals(description, epicTask.description) && status == epicTask.status
                 && Objects.equals(subTasks, epicTask.subTasks);
+    }
+
+    @Override
+    public String toString() {
+        return id + "," + TaskType.EPIC + "," + name + "," + status + "," + description;
     }
 }

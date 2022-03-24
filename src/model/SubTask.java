@@ -4,25 +4,29 @@ import java.util.Objects;
 
 // класс подзадачи
 public class SubTask extends TaskBase {
-    private EpicTask epic;
+    private int epic;
 
-    public SubTask(String name, String description, EpicTask epic) {
+    public SubTask(String name, String description, int epic) {
         super(name, description);
         this.epic = epic;
-        this.epic.addSubTask(this);
+    }
+
+    public SubTask(String name, String description, int id, Status status, int epic) {
+        super(name, description, id, status);
+        this.epic = epic;
     }
 
     public void setStatus(Status status) {
         this.status = status;
     }
 
-    public EpicTask getEpic() {
+    public int getEpic() {
         return epic;
     }
 
     @Override
     public int hashCode() {
-        return super.hashCode() + epic.hashCode();
+        return super.hashCode() + epic;
     }
 
     @Override
@@ -32,6 +36,10 @@ public class SubTask extends TaskBase {
         SubTask subTask = (SubTask) o;
         return id == subTask.id && Objects.equals(name, subTask.name)
                 && Objects.equals(description, subTask.description) && status == subTask.status
-                && epic.equals(subTask.epic);
+                && epic == subTask.epic;
+    }
+
+    public String toString() {
+        return id + "," + TaskType.SUBTASK + "," + name + "," + status + "," + description + "," + epic;
     }
 }

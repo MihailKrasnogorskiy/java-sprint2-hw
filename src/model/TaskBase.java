@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Comparator;
+
 // абстрактный класс задачи
 public abstract class TaskBase {
     String name;
@@ -11,6 +13,13 @@ public abstract class TaskBase {
         this.name = name;
         this.description = description;
         status = Status.NEW;
+    }
+
+    public TaskBase(String name, String description, int id, Status status) {
+        this.name = name;
+        this.description = description;
+        this.id = id;
+        this.status = status;
     }
 
     public String getName() {
@@ -56,15 +65,4 @@ public abstract class TaskBase {
         }
         return hash + id;
     }
-
-    @Override
-    public String toString() {
-        return "model.Task{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", id=" + id +
-                ", status=" + status +
-                '}';
-    }
-
 }

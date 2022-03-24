@@ -9,6 +9,10 @@ public class Task extends TaskBase {
         super(name, description);
     }
 
+    public Task(String name, String description, int id, Status status) {
+        super(name, description, id, status);
+    }
+
     public void setStatus(Status status) {
         this.status = status;
     }
@@ -20,5 +24,9 @@ public class Task extends TaskBase {
         Task task = (Task) o;
         return id == task.id && Objects.equals(name, task.name) && Objects.equals(description, task.description)
                 && status == task.status;
+    }
+
+    public String toString() {
+        return id + "," + TaskType.TASK + "," + name + "," + status + "," + description;
     }
 }

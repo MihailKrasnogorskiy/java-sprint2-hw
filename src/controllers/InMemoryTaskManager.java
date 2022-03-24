@@ -1,16 +1,27 @@
 package controllers;
 
-import model.*;
 import date.TaskDate;
+import model.EpicTask;
+import model.SubTask;
+import model.Task;
+import model.TaskBase;
 
 import java.util.ArrayList;
 import java.util.List;
 
 //реализация класса менеджер задач
-public class inMemoryTaskManager implements TaskManager {
+public class InMemoryTaskManager implements TaskManager {
     private final TaskDate taskDate = new TaskDate();
     private final HistoryTaskManager inMemoryHistoryManager = Managers.getDefaultHistory();
     private int id;
+
+    public TaskDate getTaskDate() {
+        return taskDate;
+    }
+
+    public HistoryTaskManager getInMemoryHistoryManager() {
+        return inMemoryHistoryManager;
+    }
 
     @Override
     public void addTask(TaskBase task) {
@@ -19,6 +30,7 @@ public class inMemoryTaskManager implements TaskManager {
             id++;
             task.setId(id);
             taskDate.getSubTaskMap().put(id, (SubTask) task);
+            taskDate.getEpicTaskMap().get(((SubTask) task).getEpic()).addSubTask((SubTask) task);
             return;
         }
         if (task instanceof Task) {
@@ -120,19 +132,19 @@ public class inMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateTask(int id, TaskBase Task) {
-        if (Task == null || id == 0) return;
-        if (Task instanceof SubTask) {
-            taskDate.getSubTaskMap().put(id, (SubTask) Task);
-            ((SubTask) Task).getEpic().getStatus();
+    public void updateTask(int id, TaskBase task) {
+        if (task == null || id == 0) return;
+        if (task instanceof SubTask) {
+            taskDate.getSubTaskMap().put(id, (SubTask) task);
+            taskDate.getEpicTaskMap().get(((SubTask) task).getEpic()).getStatus();
             return;
         }
-        if (Task instanceof EpicTask) {
-            taskDate.getEpicTaskMap().put(id, (EpicTask) Task);
+        if (task instanceof EpicTask) {
+            taskDate.getEpicTaskMap().put(id, (EpicTask) task);
             return;
         }
-        if (Task instanceof Task) {
-            taskDate.getTaskMap().put(id, (Task) Task);
+        if (task instanceof Task) {
+            taskDate.getTaskMap().put(id, (Task) task);
         }
     }
 
