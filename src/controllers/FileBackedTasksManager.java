@@ -3,7 +3,10 @@ package controllers;
 import Exceptions.ManagerSaveException;
 import model.*;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -183,7 +186,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 br.flush();
             }
         } catch (IOException e) {
-            throw new ManagerSaveException("ошибка ввода-вывода");
+            for (StackTraceElement stack : e.getStackTrace()) {
+                System.out.println("Класс: " + stack.getClassName() + ", " + "метод: " + stack.getMethodName() + ", " +
+                        "строка кода: " + stack.getLineNumber());
+            }
+            throw new ManagerSaveException("ошибка записи");
         }
     }
 
@@ -226,8 +233,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     }
                 }
             }
-        } catch (FileNotFoundException e) {
-            System.out.println("Файл не найден");
+        } catch (IOException e) {
+            for (StackTraceElement stack : e.getStackTrace()) {
+                System.out.println("Класс: " + stack.getClassName() + ", " + "метод: " + stack.getMethodName() + ", " +
+                        "строка кода: " + stack.getLineNumber());
+            }
+
+            throw new ManagerSaveException("ошибка чтения, либо файл не обнаружен");
         }
         return manager;
     }
