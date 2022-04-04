@@ -30,8 +30,9 @@ public class EpicTask extends TaskBase {
 
     @Override
     public Status getStatus() {   // проверка и возвращение статуса эпика
-        if (subTasks.size() == 0) {
+        if (subTasks.isEmpty()) {
             status = Status.NEW;
+            return Status.NEW;
         }
         int counterNew = 0;
         int counterDone = 0;

@@ -11,6 +11,7 @@ public class Main {
         Task task1 = new Task("Задача 1", "тестирование кода 1");
         Task task2 = new Task("Задача 2", "тестирование кода 2");
         EpicTask epic1 = new EpicTask("эпик 1", "что-то большое сложное 1");
+        System.out.println(epic1.getStatus());
         EpicTask epic2 = new EpicTask("эпик 2", "что-то большое сложное 2");
         manager.addTask(task1);
         manager.addTask(task2);
