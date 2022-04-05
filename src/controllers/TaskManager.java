@@ -41,7 +41,7 @@ public interface TaskManager {
     ArrayList<EpicTask> getAllEpicTask();
 
     // удаление задачи по идентификатору
-    void removeById(int id);
+    boolean removeById(int id);
 
     // обновление задачи
     void updateTask(int id, TaskBase Task);

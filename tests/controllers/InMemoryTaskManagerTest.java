@@ -5,8 +5,14 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
-InMemoryTaskManager taskManager = new InMemoryTaskManager();
+
+    public InMemoryTaskManagerTest() {
+        super(new InMemoryTaskManager());
+    }
+
+
     @Test
     void getAllTask() {
     }
+
 }

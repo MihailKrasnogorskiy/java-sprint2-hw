@@ -103,9 +103,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void removeById(int id) {
-        super.removeById(id);
+    public boolean removeById(int id) {
+        boolean isRemove;
+
+        isRemove = super.removeById(id);
         save();
+        return isRemove;
     }
 
     @Override

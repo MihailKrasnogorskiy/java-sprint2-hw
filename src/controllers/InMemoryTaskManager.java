@@ -114,7 +114,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void removeById(int id) {
+    public boolean removeById(int id) {
         if (taskDate.getTaskMap().containsKey(id)) {
             inMemoryHistoryManager.removeTaskInHistory(taskDate.getTaskMap().get(id));
             taskDate.getTaskMap().remove(id);
@@ -128,7 +128,11 @@ public class InMemoryTaskManager implements TaskManager {
             }
             inMemoryHistoryManager.removeTaskInHistory(taskDate.getEpicTaskMap().get(id));
             taskDate.getEpicTaskMap().remove(id);
-        } else System.out.println("Данный id не найден");
+        } else {
+            System.out.println("Данный id не найден");
+            return false;
+        }
+        return true;
     }
 
     @Override
