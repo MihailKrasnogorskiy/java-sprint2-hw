@@ -13,6 +13,10 @@ public interface TaskManager {
     // добавление(сохранение) задачи
     void addTask(TaskBase task);
 
+    //возвращение текущего id
+
+    int getId();
+
     // возвращение задачи по идентификатору
     Task getTaskById(int id);
 

@@ -16,6 +16,7 @@ public class InMemoryHistoryManager implements HistoryTaskManager {
 
     @Override
     public void addTask(TaskBase task) {
+        if(task == null) throw new IllegalArgumentException("передан null");
         if (listMap.containsKey(task.getId())) {
             removeTaskInHistory(task);
         }

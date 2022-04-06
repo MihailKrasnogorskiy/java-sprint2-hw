@@ -4,7 +4,7 @@ import java.io.File;
 
 // утилитарный класс менеджер
 public class Managers {
-    public static File fileTest = new File("tests/fileTest.csv");
+    public static File fileTest = new File("src/resources/fileTest.csv");
     // возвращение менеджера задач по умолчанию
     public static TaskManager getDefaultTaskManager() {
         return new InMemoryTaskManager();
@@ -15,7 +15,8 @@ public class Managers {
         return new InMemoryHistoryManager();
     }
 
-    public static TaskManager getRestorableMeneger(){
+    //возвращение менеджера способного восстановиться
+    public static TaskManager getRestorableManager() {
         return new FileBackedTasksManager(fileTest);
     }
 }

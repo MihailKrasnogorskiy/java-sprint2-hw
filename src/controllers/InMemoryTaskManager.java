@@ -24,8 +24,13 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
+    public int getId() {
+        return id;
+    }
+
+    @Override
     public void addTask(TaskBase task) {
-        if (task == null) return;
+        if (task == null) throw new IllegalArgumentException("переданы неверные значения");
         if (task instanceof SubTask) {
             id++;
             task.setId(id);
@@ -137,7 +142,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateTask(int id, TaskBase task) {
-        if (task == null || id == 0) return;
+        if (task == null || id == 0) throw new IllegalArgumentException("неверные входные данные");
         if (task instanceof SubTask) {
             taskDate.getSubTaskMap().put(id, (SubTask) task);
             taskDate.getEpicTaskMap().get(((SubTask) task).getEpic()).getStatus();

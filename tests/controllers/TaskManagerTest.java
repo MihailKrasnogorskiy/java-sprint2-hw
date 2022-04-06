@@ -1,11 +1,8 @@
 package controllers;
 
-import model.EpicTask;
-import model.Status;
-import model.SubTask;
-import model.Task;
-import org.junit.jupiter.api.BeforeEach;
+import model.*;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import java.util.List;
 
@@ -15,13 +12,12 @@ import static org.junit.jupiter.api.Assertions.*;
 abstract class TaskManagerTest<T extends TaskManager> {
 
     public T taskManager;
-    private Task task;
+    private Task task = null;
 
     public TaskManagerTest(T taskManager) {
         this.taskManager = taskManager;
     }
 
-    @BeforeEach
     private void createTask() {
         task = new Task("Test addNewTask", "Test addNewTask description");
         taskManager.addTask(task);
@@ -29,17 +25,36 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void test7_addNewTask() {
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                taskManager.addTask(null);
+            }
+        });
 
+        assertEquals("переданы неверные значения", exception.getMessage());
+        createTask();
         final int taskId = task.getId();
 
         final Task savedTask = taskManager.getTaskById(taskId);
 
-        assertNotNull(savedTask, "Задача не найдена.");
-        assertEquals(task, savedTask, "Задачи не совпадают.");
+        assertNotNull(savedTask);
+        assertEquals(task, savedTask);
     }
 
     @Test
     public void test8_updateTask() {
+
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                taskManager.updateTask(0, null);
+            }
+        });
+
+        assertEquals("неверные входные данные", exception.getMessage());
+        createTask();
+        taskManager.addTask(task);
         final int taskId = task.getId();
         task.setName("Name1");
         task.setDescription("Description1");
@@ -58,16 +73,17 @@ abstract class TaskManagerTest<T extends TaskManager> {
         final Task savedTask = taskManager.getTaskById(taskId);
         final EpicTask savedEpic = taskManager.getEpicTaskById(epicId);
         final SubTask savedSubTask = taskManager.getSubTaskById(subTaskId);
-        assertNotNull(savedTask, "Задача не найдена.");
-        assertEquals(task, savedTask, "Задачи не совпадают.");
-        assertNotNull(savedTask, "Задача не найдена.");
-        assertEquals(epicTask, savedEpic, "Задачи не совпадают.");
-        assertNotNull(savedTask, "Задача не найдена.");
-        assertEquals(subTask, savedSubTask, "Задачи не совпадают.");
+        assertNotNull(savedTask);
+        assertEquals(task, savedTask);
+        assertNotNull(savedTask);
+        assertEquals(epicTask, savedEpic);
+        assertNotNull(savedTask);
+        assertEquals(subTask, savedSubTask);
     }
 
     @Test
     public void test9_shouldGetTrueAfterRemoveById() {
+        createTask();
         EpicTask epicTask = new EpicTask("Epic1","EpicDescription");
         taskManager.addTask(epicTask);
         SubTask subTask = new SubTask("SubTask","SubTaskDescription", epicTask.getId());
@@ -85,6 +101,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
     @Test
     public void test11_shouldGet1GetAllTask() {
+        createTask();
         final List<Task> tasks = taskManager.getAllTask();
 
         assertNotNull(tasks, "Задачи на возвращаются.");
@@ -94,6 +111,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void test12_shouldGet1GetAllSubTask() {
+        createTask();
         EpicTask epicTask = new EpicTask("Epic1","EpicDescription");
         taskManager.addTask(epicTask);
         SubTask subTask = new SubTask("SubTask","SubTaskDescription", epicTask.getId());
@@ -106,6 +124,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
     @Test
     public void test13_shouldGet1GetAllEpicTask() {
+        createTask();
         EpicTask epicTask = new EpicTask("Epic1", "EpicDescription");
         taskManager.addTask(epicTask);
         SubTask subTask = new SubTask("SubTask", "SubTaskDescription", epicTask.getId());
@@ -119,6 +138,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void test14_shouldGet2GetSubTaskFromEpic() {
+        createTask();
         EpicTask epicTask = new EpicTask("Epic1", "EpicDescription");
         taskManager.addTask(epicTask);
         SubTask subTask = new SubTask("SubTask", "SubTaskDescription", epicTask.getId());
@@ -133,6 +153,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void test15_shouldGetTrueRemoveAllDifferentTasks() {
+        createTask();
         EpicTask epicTask = new EpicTask("Epic1", "EpicDescription");
         taskManager.addTask(epicTask);
         SubTask subTask = new SubTask("SubTask", "SubTaskDescription", epicTask.getId());
@@ -149,8 +170,26 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void test15_shouldGetNullGetDifferentTasksById() {
+        createTask();
         assertNull(taskManager.getSubTaskById(0));
         assertNull(taskManager.getTaskById(0));
         assertNull(taskManager.getEpicTaskById(0));
+    }
+
+    @Test
+    void test16_shouldTrueGetNullHistory() {
+        final List<TaskBase> history = taskManager.history();
+        assertTrue(history.isEmpty());
+        createTask();
+        EpicTask epicTask = new EpicTask("Epic1", "EpicDescription");
+        taskManager.addTask(epicTask);
+        SubTask subTask = new SubTask("SubTask", "SubTaskDescription", epicTask.getId());
+        taskManager.addTask(subTask);
+        taskManager.getTaskById(1);
+        taskManager.getEpicTaskById(2);
+        taskManager.getSubTaskById(3);
+        final List<TaskBase> historyNew = taskManager.history();
+        assertEquals(3,historyNew.size());
+
     }
 }

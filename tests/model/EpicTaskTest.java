@@ -15,6 +15,7 @@ class EpicTaskTest {
     @Test
     void test2_shouldGetStatusNew() {
         EpicTask epicTask = new EpicTask("Epic1", "description");
+        assertEquals(Status.NEW, epicTask.getStatus());
         SubTask subTask1 = new SubTask("subtask1", "descriprion", epicTask.getId());
         SubTask subTask2 = new SubTask("subtask2", "descriprion", epicTask.getId());
         SubTask subTask3 = new SubTask("subtask3", "descriprion", epicTask.getId());
