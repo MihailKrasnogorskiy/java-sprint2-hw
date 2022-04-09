@@ -1,7 +1,7 @@
 package model;
 
-import date.TaskDate;
-
+import java.time.Duration;
+import java.time.ZonedDateTime;
 import java.util.Objects;
 
 // класс подзадачи
@@ -16,6 +16,22 @@ public class SubTask extends TaskBase {
     public SubTask(String name, String description, int id, Status status, int epic) {
         super(name, description, id, status);
         this.epic = epic;
+    }
+
+    public SubTask(String name, String description, int epic, Duration duration, ZonedDateTime startTime) {
+        super(name, description);
+        this.epic = epic;
+        this.duration = duration;
+        this.startTime = startTime;
+        endTime = getEndTime();
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public void setStartTime(ZonedDateTime startTime) {
+        this.startTime = startTime;
     }
 
     public void setStatus(Status status) {
@@ -42,6 +58,7 @@ public class SubTask extends TaskBase {
     }
 
     public String toString() {
-        return id + "," + TaskType.SUBTASK + "," + name + "," + status + "," + description + "," + epic;
+        return id + "," + TaskType.SUBTASK + "," + name + "," + status + "," + description + "," + epic + ","
+                + startTime + "," + duration;
     }
 }

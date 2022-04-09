@@ -8,6 +8,7 @@ import model.TaskBase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 //реализация класса менеджер задач
 public class InMemoryTaskManager implements TaskManager {
@@ -30,18 +31,25 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void addTask(TaskBase task) {
-        if (task == null) throw new IllegalArgumentException("переданы неверные значения");
+        if (task == null) {
+            throw new IllegalArgumentException("переданы неверные значения");
+        }
+        if (!canSaveTask(task)) {
+            throw new IllegalArgumentException("задача пересекается по времени с существующей");
+        }
         if (task instanceof SubTask) {
             id++;
             task.setId(id);
             taskDate.getSubTaskMap().put(id, (SubTask) task);
             taskDate.getEpicTaskMap().get(((SubTask) task).getEpic()).addSubTask((SubTask) task);
+            taskDate.getSortTasks().add(task);
             return;
         }
         if (task instanceof Task) {
             id++;
             task.setId(id);
             taskDate.getTaskMap().put(id, (Task) task);
+            taskDate.getSortTasks().add(task);
             return;
         }
         if (task instanceof EpicTask) {
@@ -82,6 +90,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void removeAllTask() {      // удаление всех задач
         for (Task task : taskDate.getTaskMap().values()) {
             inMemoryHistoryManager.removeTaskInHistory(task);
+            taskDate.getSortTasks().remove(task);
         }
         taskDate.getTaskMap().clear();
     }
@@ -99,6 +108,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void removeAllSubTask() {  // удаление всех подзадач
         for (SubTask subTask : taskDate.getSubTaskMap().values()) {
             inMemoryHistoryManager.removeTaskInHistory(subTask);
+            taskDate.getSortTasks().remove(subTask);
         }
         taskDate.getSubTaskMap().clear();
     }
@@ -122,17 +132,22 @@ public class InMemoryTaskManager implements TaskManager {
     public boolean removeById(int id) {
         if (taskDate.getTaskMap().containsKey(id)) {
             inMemoryHistoryManager.removeTaskInHistory(taskDate.getTaskMap().get(id));
+            taskDate.getSortTasks().remove(taskDate.getTaskMap().get(id));
             taskDate.getTaskMap().remove(id);
         } else if (taskDate.getSubTaskMap().containsKey(id)) {
             inMemoryHistoryManager.removeTaskInHistory(taskDate.getSubTaskMap().get(id));
+            EpicTask epicTask = taskDate.getEpicTaskMap().get(taskDate.getSubTaskMap().get(id).getEpic());
+            taskDate.getSortTasks().remove(taskDate.getSubTaskMap().get(id));
             taskDate.getSubTaskMap().remove(id);
+            epicTask.getDuration();
+            epicTask.getStatus();
         } else if (taskDate.getEpicTaskMap().containsKey(id)) {
             for (SubTask subTask : taskDate.getEpicTaskMap().get(id).getSubTasks()) {
                 inMemoryHistoryManager.removeTaskInHistory(subTask);
+                taskDate.getSortTasks().remove(subTask);
                 taskDate.getSubTaskMap().remove(subTask.getId());
             }
             inMemoryHistoryManager.removeTaskInHistory(taskDate.getEpicTaskMap().get(id));
-            taskDate.getEpicTaskMap().remove(id);
         } else {
             System.out.println("Данный id не найден");
             return false;
@@ -142,10 +157,15 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateTask(int id, TaskBase task) {
-        if (task == null || id == 0) throw new IllegalArgumentException("неверные входные данные");
+        if (task == null || id == 0) {
+            throw new IllegalArgumentException("неверные входные данные");
+        }
         if (task instanceof SubTask) {
             taskDate.getSubTaskMap().put(id, (SubTask) task);
+            taskDate.getSortTasks().remove(taskDate.getSubTaskMap().get(id));
+            taskDate.getSortTasks().add(task);
             taskDate.getEpicTaskMap().get(((SubTask) task).getEpic()).getStatus();
+            taskDate.getEpicTaskMap().get(((SubTask) task).getEpic()).getDuration();
             return;
         }
         if (task instanceof EpicTask) {
@@ -154,6 +174,8 @@ public class InMemoryTaskManager implements TaskManager {
         }
         if (task instanceof Task) {
             taskDate.getTaskMap().put(id, (Task) task);
+            taskDate.getSortTasks().remove(taskDate.getTaskMap().get(id));
+            taskDate.getSortTasks().add(task);
         }
     }
 
@@ -164,5 +186,38 @@ public class InMemoryTaskManager implements TaskManager {
 
     public List<TaskBase> history() {
         return inMemoryHistoryManager.getHistory();
+    }
+
+    @Override
+
+    public TreeSet<TaskBase> getSortTask() {
+        return taskDate.getSortTasks();
+    }
+
+    public boolean canSaveTask(TaskBase task) {
+        if (getSortTask().isEmpty()) {
+            return true;
+        }
+        if (task.getStartTime() == null) {
+            return true;
+        } else {
+            for (TaskBase task1 : getSortTask()) {
+                if (task1.getStartTime() == null || task1.getEndTime() == null) {
+                    continue;
+                }
+                if (task.getStartTime().equals(task1.getStartTime()) || task.getEndTime().equals(task1.getEndTime())) {
+                    return false;
+                }
+                if (task1.getStartTime().isAfter(task.getStartTime())
+                        && task1.getEndTime().isBefore(task.getEndTime())
+                        || task.getEndTime().isAfter(task1.getStartTime())
+                        && task.getEndTime().isBefore(task1.getEndTime())
+                        || task.getStartTime().isAfter(task1.getStartTime())
+                        && task.getStartTime().isBefore(task1.getEndTime())) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

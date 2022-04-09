@@ -7,6 +7,7 @@ import model.TaskBase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 // интерфейс менеджер задач
 public interface TaskManager {
@@ -55,5 +56,8 @@ public interface TaskManager {
 
     // возвращение истории просмотра
     List<TaskBase> history();
+
+    //возвращение сортированного списка задач
+    TreeSet<TaskBase> getSortTask();
 
 }
