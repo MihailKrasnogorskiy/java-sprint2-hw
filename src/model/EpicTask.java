@@ -8,7 +8,7 @@ import java.util.Objects;
 // класс эпика
 public class EpicTask extends TaskBase {
 
-    private ArrayList<SubTask> subTasks;
+    private final ArrayList<SubTask> subTasks;
 
     public EpicTask(String name, String description) {
         super(name, description);

@@ -2,9 +2,6 @@ package model;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-
-import static java.time.format.DateTimeFormatter.ISO_ZONED_DATE_TIME;
 
 // абстрактный класс задачи
 public abstract class TaskBase {

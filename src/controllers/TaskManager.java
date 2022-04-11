@@ -60,4 +60,6 @@ public interface TaskManager {
     //возвращение сортированного списка задач
     TreeSet<TaskBase> getSortTask();
 
+    //проверка пересечения по времени
+    boolean canSaveTaskInSortSet(TaskBase task);
 }

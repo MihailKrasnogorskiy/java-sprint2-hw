@@ -11,20 +11,20 @@ import java.util.TreeSet;
 // класс для хранения задач
 public class TaskDate {
 
-    private HashMap<Integer, Task> taskMap = new HashMap<>();
-    private HashMap<Integer, SubTask> subTaskMap = new HashMap<>();
-    private HashMap<Integer, EpicTask> epicTaskMap = new HashMap<>();
-    private TreeSet<TaskBase> sortTasks = new TreeSet<>((task1, task2) -> {
-        if (((TaskBase) task2).getStartTime() == null && ((TaskBase) task1).getStartTime() != null) {
+    private final HashMap<Integer, Task> taskMap = new HashMap<>();
+    private final HashMap<Integer, SubTask> subTaskMap = new HashMap<>();
+    private final HashMap<Integer, EpicTask> epicTaskMap = new HashMap<>();
+    private final TreeSet<TaskBase> sortTasks = new TreeSet<>((task1, task2) -> {
+        if (task2.getStartTime() == null && task1.getStartTime() != null) {
             return -1;
-        } else if (((TaskBase) task2).getStartTime() == null) {
-            return ((TaskBase) task1).getId() - ((TaskBase) task2).getId();
-        } else if (((TaskBase) task1).getStartTime() == null && ((TaskBase) task2).getStartTime() != null) {
+        } else if (task2.getStartTime() == null) {
+            return task1.getId() - task2.getId();
+        } else if (task1.getStartTime() == null && task2.getStartTime() != null) {
             return 1;
-        } else if (((TaskBase) task1).getStartTime().isAfter(((TaskBase) task2).getStartTime())) {
+        } else if (task1.getStartTime().isAfter(task2.getStartTime())) {
             return 1;
-        } else if (((TaskBase) task1).getStartTime().equals(((TaskBase) task2).getStartTime())) {
-            return ((TaskBase) task1).getId() - ((TaskBase) task2).getId();
+        } else if (task1.getStartTime().equals(task2.getStartTime())) {
+            return task1.getId() - task2.getId();
         }
         return -1;
     });

@@ -34,7 +34,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (task == null) {
             throw new IllegalArgumentException("переданы неверные значения");
         }
-        if (!canSaveTask(task)) {
+        if (!canSaveTaskInSortSet(task)) {
             throw new IllegalArgumentException("задача пересекается по времени с существующей");
         }
         if (task instanceof SubTask) {
@@ -194,7 +194,8 @@ public class InMemoryTaskManager implements TaskManager {
         return taskDate.getSortTasks();
     }
 
-    public boolean canSaveTask(TaskBase task) {
+    @Override
+    public boolean canSaveTaskInSortSet(TaskBase task) {
         if (getSortTask().isEmpty()) {
             return true;
         }

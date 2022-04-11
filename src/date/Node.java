@@ -1,11 +1,12 @@
 package date;
+
 //класс узла списка
 public class Node<E> {
     private Node<E> prev;
     private Node<E> next;
-    private E date;
+    private final E date;
 
-    public Node (E e){
+    public Node(E e) {
         this.date = e;
     }
 

@@ -10,7 +10,7 @@ import org.junit.jupiter.api.function.Executable;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+//класс для тестирования класса InMemoryHistoryManagerTest
 class InMemoryHistoryManagerTest {
     HistoryTaskManager historyTaskManager = Managers.getDefaultHistory();
     TaskManager taskManager = Managers.getDefaultTaskManager();

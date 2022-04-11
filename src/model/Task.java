@@ -22,12 +22,14 @@ public class Task extends TaskBase {
         endTime = getEndTime();
     }
 
-    public void setDuration(Duration duration){
+    public void setDuration(Duration duration) {
         this.duration = duration;
     }
-    public void setStartTime(ZonedDateTime startTime){
+
+    public void setStartTime(ZonedDateTime startTime) {
         this.startTime = startTime;
     }
+
     public void setStatus(Status status) {
         this.status = status;
     }
@@ -43,7 +45,7 @@ public class Task extends TaskBase {
 
     public String toString() {
 
-            return id + "," + TaskType.TASK + "," + name + "," + status + "," + description + ","
-                    + startTime + "," + duration;
+        return id + "," + TaskType.TASK + "," + name + "," + status + "," + description + ","
+                + startTime + "," + duration;
     }
 }

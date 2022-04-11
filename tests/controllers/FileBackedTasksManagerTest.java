@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+//класс для тестирования класса FileBackedTasksManager
 class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> {
 
     public FileBackedTasksManagerTest() {
@@ -25,9 +25,16 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
     File loadFile = new File("src/resources/loadFile.csv");
     File loadFileWithoutHistory = new File("src/resources/loadFileWithoutHistory.csv");
     File test = new File("src/resources/test.csv");
+    File fileIsEmpty = new File("src/resources/fileIsEmpty.csv");
+    File testWithOutHistory = new File("src/resources/testWithOutHistory.csv");
 
-    @Test
+    @Test //тестирование загрузки из файла
     void test20_loadFromFile() {
+        FileBackedTasksManager emptyManager = FileBackedTasksManager.loadFromFile(fileIsEmpty);
+        assertTrue(emptyManager.history().isEmpty());
+        assertTrue(emptyManager.getAllTask().isEmpty());
+        assertTrue(emptyManager.getAllSubTask().isEmpty());
+        assertTrue(emptyManager.getAllEpicTask().isEmpty());
         FileBackedTasksManager loadedManager = FileBackedTasksManager.loadFromFile(loadFile);
         List<TaskBase> tasks = new ArrayList<>(loadedManager.getAllTask());
         tasks.addAll(loadedManager.getAllEpicTask());
@@ -42,8 +49,10 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         assertTrue(historyIsEmpty.isEmpty());
     }
 
-    @Test
+    @Test //тестирование сохранения в файл
     void test21_saveToFile() {
+        taskManager.save();
+        compareFiles(fileIsEmpty,taskManager.getFile());
         ZonedDateTime startTime1 = ZonedDateTime.parse("2022-04-10T17:50+03:00[Europe/Moscow]");
         Duration duration = Duration.ofMinutes(30);
         ZonedDateTime startTime2 = startTime1.plusHours(1);
@@ -70,6 +79,20 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         taskManager.getSubTaskById(7);
         taskManager.getTaskById(1);
         taskManager.getEpicTaskById(4);
+        compareFiles(test,taskManager.getFile());
+        FileBackedTasksManager managerWithOutHistory = (FileBackedTasksManager) Managers.getRestorableManager();
+        managerWithOutHistory.addTask(task1);
+        managerWithOutHistory.addTask(task2);
+        managerWithOutHistory.addTask(epic1);
+        managerWithOutHistory.addTask(epic2);
+        managerWithOutHistory.addTask(subTask11);
+        managerWithOutHistory.addTask(subTask12);
+        managerWithOutHistory.addTask(subTask13);
+        compareFiles(testWithOutHistory,managerWithOutHistory.getFile());
+
+    }
+
+    private void compareFiles(File test, File file) {
         String[] testString = new String[10];
         String[] fileString = new String[10];
         int i = 0;
@@ -80,7 +103,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
                 testString[i] = scanner.nextLine();
                 i++;
             }
-            Scanner scanner1 = new Scanner(taskManager.getFile());
+            Scanner scanner1 = new Scanner(file);
             i = 0;
             while (scanner1.hasNext()) {
                 fileString[i] = scanner1.nextLine();
@@ -90,9 +113,8 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        for (int y = 0; y<testString.length;y++){
-            assertEquals(testString[y],fileString[y]);
+        for (int y = 0; y < testString.length; y++) {
+            assertEquals(testString[y], fileString[y]);
         }
-
     }
 }

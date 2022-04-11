@@ -3,16 +3,16 @@ package model;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
+//класс для тестирования класса Epic
 class EpicTaskTest {
 
-       @Test
+       @Test//тестирование расчёта статуса
     void test1_shouldGetStatusNewWithEmptySubtaskList() {
         EpicTask epicTask = new EpicTask("Epic1", "description");
         assertEquals(Status.NEW, epicTask.getStatus());
     }
 
-    @Test
+    @Test//тестирование расчёта статуса
     void test2_shouldGetStatusNew() {
         EpicTask epicTask = new EpicTask("Epic1", "description");
         assertEquals(Status.NEW, epicTask.getStatus());
@@ -27,7 +27,7 @@ class EpicTaskTest {
         assertEquals(Status.NEW, epicTask.getStatus());
     }
 
-    @Test
+    @Test//тестирование расчёта статуса
     void test3_shouldGetStatusInProgressIfAllSubTaskInProgress() {
         EpicTask epicTask = new EpicTask("Epic1", "description");
         SubTask subTask1 = new SubTask("subtask1", "descriprion", epicTask.getId());
@@ -45,7 +45,7 @@ class EpicTaskTest {
         assertEquals(Status.IN_PROGRESS, epicTask.getStatus());
     }
 
-    @Test
+    @Test//тестирование расчёта статуса
     void test4_shouldGetStatusInProgressIfSubTaskStatusDifferent() {
         EpicTask epicTask = new EpicTask("Epic1", "description");
         SubTask subTask1 = new SubTask("subtask1", "descriprion", epicTask.getId());
@@ -63,7 +63,7 @@ class EpicTaskTest {
         assertEquals(Status.IN_PROGRESS, epicTask.getStatus());
     }
 
-    @Test
+    @Test//тестирование расчёта статуса
     void test5_shouldGetStatusInProgressIfAllSubTaskDone() {
         EpicTask epicTask = new EpicTask("Epic1", "description");
         SubTask subTask1 = new SubTask("subtask1", "descriprion", epicTask.getId());
@@ -81,7 +81,7 @@ class EpicTaskTest {
         assertEquals(Status.DONE, epicTask.getStatus());
     }
 
-    @Test
+    @Test//тестирование расчёта статуса
     void test6_shouldGet1addSubTask() {
         EpicTask epicTask = new EpicTask("Epic1", "description");
         SubTask subTask1 = new SubTask("subtask1", "descriprion", epicTask.getId());
