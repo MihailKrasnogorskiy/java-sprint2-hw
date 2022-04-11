@@ -7,11 +7,16 @@ import model.TaskBase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 // интерфейс менеджер задач
 public interface TaskManager {
     // добавление(сохранение) задачи
     void addTask(TaskBase task);
+
+    //возвращение текущего id
+
+    int getId();
 
     // возвращение задачи по идентификатору
     Task getTaskById(int id);
@@ -41,7 +46,7 @@ public interface TaskManager {
     ArrayList<EpicTask> getAllEpicTask();
 
     // удаление задачи по идентификатору
-    void removeById(int id);
+    boolean removeById(int id);
 
     // обновление задачи
     void updateTask(int id, TaskBase Task);
@@ -52,4 +57,9 @@ public interface TaskManager {
     // возвращение истории просмотра
     List<TaskBase> history();
 
+    //возвращение сортированного списка задач
+    TreeSet<TaskBase> getSortTask();
+
+    //проверка пересечения по времени
+    boolean canSaveTaskInSortSet(TaskBase task);
 }

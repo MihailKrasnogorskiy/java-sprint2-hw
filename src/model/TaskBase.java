@@ -1,6 +1,7 @@
 package model;
 
-import java.util.Comparator;
+import java.time.Duration;
+import java.time.ZonedDateTime;
 
 // абстрактный класс задачи
 public abstract class TaskBase {
@@ -8,6 +9,9 @@ public abstract class TaskBase {
     String description;
     int id;
     Status status;
+    Duration duration;
+    ZonedDateTime startTime;
+    ZonedDateTime endTime;
 
     public TaskBase(String name, String description) {
         this.name = name;
@@ -20,6 +24,14 @@ public abstract class TaskBase {
         this.description = description;
         this.id = id;
         this.status = status;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public ZonedDateTime getStartTime() {
+        return startTime;
     }
 
     public String getName() {
@@ -64,5 +76,14 @@ public abstract class TaskBase {
             hash = hash + status.hashCode();
         }
         return hash + id;
+    }
+
+    public ZonedDateTime getEndTime() {
+        if (startTime == null) {
+            endTime = null;
+            return endTime;
+        }
+        endTime = startTime.plus(duration);
+        return endTime;
     }
 }

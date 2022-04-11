@@ -10,12 +10,13 @@ import java.util.List;
 
 
 public class InMemoryHistoryManager implements HistoryTaskManager {
-    private LinkedList<TaskBase> historyList = new LinkedList<>();
-    private HashMap<Integer, Node> listMap = new HashMap<>();
+    private final LinkedList<TaskBase> historyList = new LinkedList<>();
+    private final HashMap<Integer, Node> listMap = new HashMap<>();
 
 
     @Override
     public void addTask(TaskBase task) {
+        if (task == null) throw new IllegalArgumentException("передан null");
         if (listMap.containsKey(task.getId())) {
             removeTaskInHistory(task);
         }

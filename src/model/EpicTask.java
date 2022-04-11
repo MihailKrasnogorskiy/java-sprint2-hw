@@ -1,12 +1,14 @@
 package model;
 
+import java.time.Duration;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 
 // класс эпика
 public class EpicTask extends TaskBase {
 
-    private ArrayList<SubTask> subTasks;
+    private final ArrayList<SubTask> subTasks;
 
     public EpicTask(String name, String description) {
         super(name, description);
@@ -26,12 +28,14 @@ public class EpicTask extends TaskBase {
     public void addSubTask(SubTask subTask) { // добавление подзадачи в эпик
         subTasks.add(subTask);
         getStatus();
+        getDuration();
     }
 
     @Override
     public Status getStatus() {   // проверка и возвращение статуса эпика
-        if (subTasks.size() == 0) {
+        if (subTasks.isEmpty()) {
             status = Status.NEW;
+            return Status.NEW;
         }
         int counterNew = 0;
         int counterDone = 0;
@@ -78,6 +82,38 @@ public class EpicTask extends TaskBase {
 
     @Override
     public String toString() {
-        return id + "," + TaskType.EPIC + "," + name + "," + status + "," + description;
+
+        return id + "," + TaskType.EPIC + "," + name + "," + status + "," + description + ","
+                + startTime + "," + duration;
+    }
+
+    @Override
+    public Duration getDuration() {
+        if (!subTasks.isEmpty()) {
+            ZonedDateTime minStartTime = subTasks.get(0).getStartTime();
+            ZonedDateTime maxEndTIme = subTasks.get(0).getEndTime();
+
+            for (SubTask subTask : subTasks) {
+                if (subTask.getEndTime() == null || subTask.getEndTime() == null) {
+                    continue;
+                }
+                if (subTask.getStartTime().isBefore(minStartTime)) {
+                    minStartTime = subTask.getStartTime();
+                }
+                if (subTask.getEndTime().isAfter(maxEndTIme)) {
+                    maxEndTIme = subTask.getEndTime();
+                }
+                duration = Duration.between(minStartTime, maxEndTIme);
+                endTime = maxEndTIme;
+                startTime = minStartTime;
+            }
+            return duration;
+        }
+        return Duration.ZERO;
+    }
+
+    @Override
+    public ZonedDateTime getEndTime() {
+        return endTime;
     }
 }
