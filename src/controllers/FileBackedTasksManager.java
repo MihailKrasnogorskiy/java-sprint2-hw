@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+
 //класс сохраняемого менеджера
 public class FileBackedTasksManager extends InMemoryTaskManager {
     private File file;
@@ -25,7 +26,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     public static void main(String[] args) {
         File file = new File("src/date/condition.csv");
         FileBackedTasksManager manager = new FileBackedTasksManager(file);
-        ZonedDateTime startTime1 = ZonedDateTime.now();
+        ZonedDateTime startTime1 = ZonedDateTime.parse("2022-04-10T17:50+03:00[Europe/Moscow]");
         Duration duration = Duration.ofMinutes(30);
         ZonedDateTime startTime2 = startTime1.plusHours(1);
         // создание объектов задач, подзадач, эпиков и менеджера
@@ -82,6 +83,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         manager.getSubTaskById(11);
 
       FileBackedTasksManager manager1 = FileBackedTasksManager.loadFromFile(file);
+    }
+
+    public File getFile() {
+        return file;
     }
 
     @Override

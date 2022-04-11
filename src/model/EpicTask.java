@@ -82,8 +82,9 @@ public class EpicTask extends TaskBase {
 
     @Override
     public String toString() {
-        return id + "," + TaskType.EPIC + "," + name + "," + status + "," + description + "," + startTime + ","
-                + duration;
+
+        return id + "," + TaskType.EPIC + "," + name + "," + status + "," + description + ","
+                + startTime + "," + duration;
     }
 
     @Override

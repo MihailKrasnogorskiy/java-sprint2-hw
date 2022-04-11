@@ -58,7 +58,8 @@ public class SubTask extends TaskBase {
     }
 
     public String toString() {
-        return id + "," + TaskType.SUBTASK + "," + name + "," + status + "," + description + "," + epic + ","
-                + startTime + "," + duration;
+
+            return id + "," + TaskType.SUBTASK + "," + name + "," + status + "," + description + "," + epic + ","
+                    + startTime + "," + duration;
     }
 }

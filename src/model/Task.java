@@ -42,7 +42,8 @@ public class Task extends TaskBase {
     }
 
     public String toString() {
-        return id + "," + TaskType.TASK + "," + name + "," + status + "," + description + "," + startTime + ","
-                + duration;
+
+            return id + "," + TaskType.TASK + "," + name + "," + status + "," + description + ","
+                    + startTime + "," + duration;
     }
 }
