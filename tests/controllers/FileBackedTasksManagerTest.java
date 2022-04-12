@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> {
 
     public FileBackedTasksManagerTest() {
-        super((FileBackedTasksManager) Managers.getRestorableManager());
+        super((FileBackedTasksManager) Managers.getRestorableManagerForTests());
     }
 
     File loadFile = new File("src/resources/loadFile.csv");
@@ -80,7 +80,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         taskManager.getTaskById(1);
         taskManager.getEpicTaskById(4);
         compareFiles(test,taskManager.getFile());
-        FileBackedTasksManager managerWithOutHistory = (FileBackedTasksManager) Managers.getRestorableManager();
+        FileBackedTasksManager managerWithOutHistory = (FileBackedTasksManager) Managers.getRestorableManagerForTests();
         managerWithOutHistory.addTask(task1);
         managerWithOutHistory.addTask(task2);
         managerWithOutHistory.addTask(epic1);

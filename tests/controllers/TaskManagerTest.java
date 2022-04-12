@@ -15,14 +15,23 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     public T taskManager;
     private Task task = null;
+    private  EpicTask epicTask;
+    private SubTask subTask;
 
     public TaskManagerTest(T taskManager) {
         this.taskManager = taskManager;
     }
 
     private void createTask() {
-        task = new Task("Test addNewTask", "Test addNewTask description");
+        ZonedDateTime startTime1 = ZonedDateTime.parse("2022-04-10T17:50+03:00[Europe/Moscow]");
+        Duration duration = Duration.ofMinutes(30);
+        task = new Task("Задача 1", "тестирование кода 1", duration, startTime1);
         taskManager.addTask(task);
+        epicTask = new EpicTask("Epic1", "EpicDescription");
+        taskManager.addTask(epicTask);
+        subTask = new SubTask("SubTask", "SubTaskDescription", epicTask.getId());
+        taskManager.addTask(subTask);
+
     }
 
     @Test // тестирование добавления задачи
@@ -56,19 +65,14 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         assertEquals("неверные входные данные", exception.getMessage());
         createTask();
-        taskManager.addTask(task);
         final int taskId = task.getId();
         task.setName("Name1");
         task.setDescription("Description1");
         task.setStatus(Status.DONE);
         taskManager.updateTask(taskId, task);
-        EpicTask epicTask = new EpicTask("Epic1", "EpicDescription");
-        taskManager.addTask(epicTask);
         final int epicId = epicTask.getId();
         epicTask.setName("newEpicName");
         taskManager.updateTask(epicId, epicTask);
-        SubTask subTask = new SubTask("SubTask", "SubTaskDescription", epicTask.getId());
-        taskManager.addTask(subTask);
         final int subTaskId = subTask.getId();
         subTask.setDescription("new description");
         taskManager.updateTask(subTaskId, subTask);
@@ -86,10 +90,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test // тестирование удаления задачи по id
     public void test9_shouldGetTrueAfterRemoveById() {
         createTask();
-        EpicTask epicTask = new EpicTask("Epic1","EpicDescription");
-        taskManager.addTask(epicTask);
-        SubTask subTask = new SubTask("SubTask","SubTaskDescription", epicTask.getId());
-        taskManager.addTask(subTask);
         assertTrue(taskManager.removeById(1));
         assertTrue(taskManager.removeById(3));
         assertTrue(taskManager.removeById(2));
@@ -98,7 +98,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test //тестирование удаления задачи с неверным  идентификатором
     public void test10_shouldGetFalseAfterRemoveById() {
-
         assertFalse(taskManager.removeById(0));
     }
     @Test //тестирование возвращения списка всех задач
@@ -114,23 +113,15 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test //тестирование возвращения списка всех подзадач
     public void test12_shouldGet1GetAllSubTask() {
         createTask();
-        EpicTask epicTask = new EpicTask("Epic1","EpicDescription");
-        taskManager.addTask(epicTask);
-        SubTask subTask = new SubTask("SubTask","SubTaskDescription", epicTask.getId());
-        taskManager.addTask(subTask);
         final List<SubTask> tasks = taskManager.getAllSubTask();
 
         assertNotNull(tasks);
         assertEquals(1, tasks.size());
         assertEquals(subTask, tasks.get(0));
     }
-    @Test //тестирование возвращения списка всех эпикjd
+    @Test //тестирование возвращения списка всех эпиков
     public void test13_shouldGet1GetAllEpicTask() {
         createTask();
-        EpicTask epicTask = new EpicTask("Epic1", "EpicDescription");
-        taskManager.addTask(epicTask);
-        SubTask subTask = new SubTask("SubTask", "SubTaskDescription", epicTask.getId());
-        taskManager.addTask(subTask);
         final List<EpicTask> tasks = taskManager.getAllEpicTask();
 
         assertNotNull(tasks);
@@ -141,10 +132,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test //тестирование возвращения списка подзадач из эпика
     public void test14_shouldGet2GetSubTaskFromEpic() {
         createTask();
-        EpicTask epicTask = new EpicTask("Epic1", "EpicDescription");
-        taskManager.addTask(epicTask);
-        SubTask subTask = new SubTask("SubTask", "SubTaskDescription", epicTask.getId());
-        taskManager.addTask(subTask);
         SubTask subTask1 = new SubTask("SubTask1", "SubTaskDescription1", epicTask.getId());
         taskManager.addTask(subTask);
         final List<SubTask> tasks = taskManager.getSubTaskFromEpic(epicTask);
@@ -156,10 +143,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test //тестирование удаления задач
     public void test15_shouldGetTrueRemoveAllDifferentTasks() {
         createTask();
-        EpicTask epicTask = new EpicTask("Epic1", "EpicDescription");
-        taskManager.addTask(epicTask);
-        SubTask subTask = new SubTask("SubTask", "SubTaskDescription", epicTask.getId());
-        taskManager.addTask(subTask);
         taskManager.removeAllTask();
         final List<Task> tasks = taskManager.getAllTask();
         assertTrue(tasks.isEmpty());
@@ -183,10 +166,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
         final List<TaskBase> history = taskManager.history();
         assertTrue(history.isEmpty());
         createTask();
-        EpicTask epicTask = new EpicTask("Epic1", "EpicDescription");
-        taskManager.addTask(epicTask);
-        SubTask subTask = new SubTask("SubTask", "SubTaskDescription", epicTask.getId());
-        taskManager.addTask(subTask);
         taskManager.getTaskById(1);
         taskManager.getEpicTaskById(2);
         taskManager.getSubTaskById(3);
@@ -196,20 +175,14 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test //тестирование добавления в сортированный список
     void test22_getSortTask(){
         assertTrue(taskManager.getSortTask().isEmpty());
-        ZonedDateTime startTime1 = ZonedDateTime.parse("2022-04-10T17:50+03:00[Europe/Moscow]");
-        Duration duration = Duration.ofMinutes(30);
-        task = new Task("Задача 1", "тестирование кода 1", duration, startTime1);
-        taskManager.addTask(task);
-        assertEquals(1,taskManager.getSortTask().size());
-        EpicTask epicTask = new EpicTask("Epic1", "EpicDescription");
-        taskManager.addTask(epicTask);
-        assertEquals(1,taskManager.getSortTask().size());
-        SubTask subTask = new SubTask("SubTask", "SubTaskDescription", epicTask.getId());
-        taskManager.addTask(subTask);
+        createTask();
         assertEquals(2,taskManager.getSortTask().size());
+
     }
 
-    @Test //тестирование поиска пересечений
+    @Test /*тестирование поиска пересечений. В данном тесте создание задач оставленно
+    по причине необходимости создания задач последовательно по одной и тестирования работы метода после каждой
+    новой задачи*/
     void test23_canSaveTaskInSortSet(){
         ZonedDateTime startTime1 = ZonedDateTime.parse("2022-04-10T17:50+03:00[Europe/Moscow]");
         Duration duration = Duration.ofMinutes(30);
