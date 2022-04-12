@@ -17,7 +17,10 @@ public class Managers {
     }
 
     //возвращение менеджера способного восстановиться
-    public static TaskManager getRestorableManager() {
+    public static TaskManager getRestorableManagerForTests() {
         return new FileBackedTasksManager(fileTest);
     }
+
+
+
 }
