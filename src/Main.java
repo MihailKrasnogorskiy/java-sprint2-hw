@@ -1,3 +1,4 @@
+import com.google.gson.Gson;
 import controllers.Managers;
 import controllers.TaskManager;
 import model.EpicTask;
@@ -9,6 +10,7 @@ import java.time.Duration;
 import java.time.ZonedDateTime;
 
 public class Main {
+   static Gson gson = new Gson();
     public static void main(String[] args) {
         TaskManager manager = Managers.getDefaultTaskManager();
         ZonedDateTime startTime1 = ZonedDateTime.now();
@@ -52,6 +54,6 @@ public class Main {
         System.out.println(epic1);
         System.out.println(manager.getSortTask());
 //        SubTask subTask13 = new SubTask("подзадача 1.3", "что-то маленькое и лёгкое 1.2", epic1.getId());
-
+        System.out.println(gson.toJson(manager.getAllSubTask()));
     }
 }

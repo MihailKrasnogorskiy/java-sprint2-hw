@@ -185,11 +185,16 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
     }
 
-    //метод сохранения состояния менеджера
-    public void save() {
+    public List<TaskBase> getAllTasks(){
         List<TaskBase> list = new ArrayList<>(getAllEpicTask());
         list.addAll(getAllTask());
         list.addAll(getAllSubTask());
+        return list;
+    }
+
+    //метод сохранения состояния менеджера
+    public void save() {
+        List<TaskBase> list = getAllTasks();
         try (BufferedWriter br = new BufferedWriter(new FileWriter(file))) {
             br.write("id,type,name,status,description,epic\n");
             for (TaskBase task : list) {
