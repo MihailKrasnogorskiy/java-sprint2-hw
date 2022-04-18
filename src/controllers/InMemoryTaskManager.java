@@ -157,7 +157,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateTask(int id, TaskBase task) {
-        if (task == null || id == 0) {
+        if (task == null || id == 0 || task.getId() !=id) {
             throw new IllegalArgumentException("неверные входные данные");
         }
         if (task instanceof SubTask) {

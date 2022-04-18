@@ -21,10 +21,10 @@ public class HttpTaskServer {
     public HttpServer httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
 
     {
-        httpServer.createContext("/tasks", new TasksHandler());
-        httpServer.createContext("/tasks/task/{}", new TaskHandler());
-        httpServer.createContext("/tasks/epictask/{}", new EpicTaskHandler());
-        httpServer.createContext("/tasks/subtask/{}", new SubTaskHandler());
+       // httpServer.createContext("/tasks", new TasksHandler());
+        httpServer.createContext("/tasks/task/", new TaskHandler());
+        httpServer.createContext("/tasks/epictask/", new EpicTaskHandler());
+        httpServer.createContext("/tasks/subtask/", new SubTaskHandler());
 
         httpServer.start();
     }
@@ -51,26 +51,31 @@ public class HttpTaskServer {
         public void handle(HttpExchange httpExchange) throws IOException {
             String method = httpExchange.getRequestMethod();
             String response = "";
-            String path = httpExchange.getRequestURI().getPath();
-            String[] splitStrings = path.split("\\?");
+            String parameters = httpExchange.getRequestURI().getQuery();
+            System.out.println(parameters);
             int id = 0;
-            if (splitStrings.length == 2) {
-                id = Integer.parseInt(splitStrings[1].split("=")[1]);
+            if(parameters!=null){
+                id = Integer.parseInt(parameters.split("=")[1]);
             }
             switch (method) {
                 case "GET":
                     if (id == 0) {
+                        System.out.println("Отдаю все таски");
                         response = gson.toJson(manager.getAllTask());
 
                     } else {
+                        System.out.println("Отдаю такску " + id);
                         response = gson.toJson(manager.getTaskById(id));
                     }
                     httpExchange.sendResponseHeaders(200, 0);
                     break;
                 case "POST":
+                    System.out.println("Началась обработка пост");
                     InputStream inputStream = httpExchange.getRequestBody();
                     String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+                    System.out.println(body);
                     if (id == 0) {
+                        System.out.println(gson.fromJson(body, Task.class));
                         manager.addTask(gson.fromJson(body, Task.class));
                     } else {
                         manager.updateTask(id, gson.fromJson(body, Task.class));
@@ -104,11 +109,11 @@ public class HttpTaskServer {
         public void handle(HttpExchange httpExchange) throws IOException {
             String method = httpExchange.getRequestMethod();
             String response = "";
-            String path = httpExchange.getRequestURI().getPath();
-            String[] splitStrings = path.split("\\?");
+            String parameters = httpExchange.getRequestURI().getQuery();
+            System.out.println(parameters);
             int id = 0;
-            if (splitStrings.length == 2) {
-                id = Integer.parseInt(splitStrings[1].split("=")[1]);
+            if(parameters!=null){
+                id = Integer.parseInt(parameters.split("=")[1]);
             }
             switch (method) {
                 case "GET":
@@ -157,11 +162,11 @@ public class HttpTaskServer {
         public void handle(HttpExchange httpExchange) throws IOException {
             String method = httpExchange.getRequestMethod();
             String response = "";
-            String path = httpExchange.getRequestURI().getPath();
-            String[] splitStrings = path.split("\\?");
+            String parameters = httpExchange.getRequestURI().getQuery();
+            System.out.println(parameters);
             int id = 0;
-            if (splitStrings.length == 2) {
-                id = Integer.parseInt(splitStrings[1].split("=")[1]);
+            if(parameters!=null){
+                id = Integer.parseInt(parameters.split("=")[1]);
             }
             switch (method) {
                 case "GET":

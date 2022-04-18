@@ -94,7 +94,7 @@ public class EpicTask extends TaskBase {
             ZonedDateTime maxEndTIme = subTasks.get(0).getEndTime();
 
             for (SubTask subTask : subTasks) {
-                if (subTask.getEndTime() == null || subTask.getEndTime() == null) {
+                if (subTask.getStartTime() == null || subTask.getEndTime() == null) {
                     continue;
                 }
                 if (subTask.getStartTime().isBefore(minStartTime)) {
