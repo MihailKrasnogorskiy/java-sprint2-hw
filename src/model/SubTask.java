@@ -6,6 +6,7 @@ import java.util.Objects;
 
 // класс подзадачи
 public class SubTask extends TaskBase {
+    private final TaskType TYPE = TaskType.SUBTASK;
     private final int epic;
 
     public SubTask(String name, String description, int epic) {
@@ -59,7 +60,7 @@ public class SubTask extends TaskBase {
 
     public String toString() {
 
-        return id + "," + TaskType.SUBTASK + "," + name + "," + status + "," + description + "," + epic + ","
+        return id + "," + TYPE + "," + name + "," + status + "," + description + "," + epic + ","
                 + startTime + "," + duration;
     }
 }

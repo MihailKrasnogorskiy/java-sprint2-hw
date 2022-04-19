@@ -7,7 +7,7 @@ import java.util.Objects;
 
 // класс эпика
 public class EpicTask extends TaskBase {
-
+    private final TaskType TYPE = TaskType.EPIC;
     private final ArrayList<SubTask> subTasks;
 
     public EpicTask(String name, String description) {
@@ -83,7 +83,7 @@ public class EpicTask extends TaskBase {
     @Override
     public String toString() {
 
-        return id + "," + TaskType.EPIC + "," + name + "," + status + "," + description + ","
+        return id + "," + TYPE + "," + name + "," + status + "," + description + ","
                 + startTime + "," + duration;
     }
 

@@ -59,6 +59,20 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
+    public TaskBase getAnyTaskByID(int id){
+        if (taskDate.getTaskMap().containsKey(id)) {
+            inMemoryHistoryManager.addTask(taskDate.getTaskMap().get(id));
+            return taskDate.getTaskMap().get(id);
+        } else if (taskDate.getSubTaskMap().containsKey(id)) {
+            inMemoryHistoryManager.addTask(taskDate.getSubTaskMap().get(id));
+            return taskDate.getSubTaskMap().get(id);
+        }else if (taskDate.getEpicTaskMap().containsKey(id)) {
+            inMemoryHistoryManager.addTask(taskDate.getEpicTaskMap().get(id));
+            return taskDate.getEpicTaskMap().get(id);
+        }
+        return null;
+    }
+
     @Override
     public Task getTaskById(int id) {
         if (taskDate.getTaskMap().containsKey(id)) {

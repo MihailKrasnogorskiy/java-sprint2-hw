@@ -6,7 +6,7 @@ import java.util.Objects;
 
 // класс задачи
 public class Task extends TaskBase {
-
+ private final TaskType TYPE = TaskType.TASK;
     public Task(String name, String description) {
         super(name, description);
     }
@@ -45,7 +45,7 @@ public class Task extends TaskBase {
 
     public String toString() {
 
-        return id + "," + TaskType.TASK + "," + name + "," + status + "," + description + ","
+        return id + "," + TYPE + "," + name + "," + status + "," + description + ","
                 + startTime + "," + duration;
     }
 }
