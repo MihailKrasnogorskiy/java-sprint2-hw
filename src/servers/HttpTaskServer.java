@@ -42,7 +42,7 @@ public class HttpTaskServer {
             String response = "";
             String path = httpExchange.getRequestURI().getPath();
             String[] splitPath = path.split("/");
-            String query = httpExchange.getRequestURI().getQuery();
+            String query = httpExchange.getRequestURI().getRawQuery();
             int id = -1;
             if (query != null) {
                 id = Integer.parseInt(query.split("=")[1]);

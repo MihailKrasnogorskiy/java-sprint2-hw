@@ -4,6 +4,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
@@ -70,7 +71,36 @@ public class KVServer {
             }
         });
         server.createContext("/load", (h) -> {
-            // TODO Добавьте получение значения по ключу
+            try {
+                System.out.println("\n/load");
+                if (!hasAuth(h)) {
+                    System.out.println("Запрос неавторизован, нужен параметр в query API_KEY со значением апи-ключа");
+                    h.sendResponseHeaders(403, 0);
+                    return;
+                }
+                if (h.getRequestMethod().equals("GET")) {
+                    String key = h.getRequestURI().getPath().substring("/load/".length());
+                    if (key.isEmpty()) {
+                        System.out.println("Key для сохранения пустой. key указывается в пути: /load/{key}");
+                        h.sendResponseHeaders(400, 0);
+                        return;
+                    }
+                    if (!data.containsKey(key)){
+                        h.sendResponseHeaders(404,0);
+                    }else {
+                        String response = data.get(key);
+                        h.sendResponseHeaders(200, 0);
+                        try (OutputStream os = h.getResponseBody()) {
+                            os.write(response.getBytes());
+                        }
+                    }
+                } else {
+                    System.out.println("/load ждёт GET-запрос, а получил: " + h.getRequestMethod());
+                    h.sendResponseHeaders(405, 0);
+                }
+            } finally {
+                h.close();
+            }
         });
     }
 
