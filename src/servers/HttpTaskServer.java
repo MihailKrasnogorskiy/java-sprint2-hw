@@ -22,7 +22,7 @@ import java.nio.charset.StandardCharsets;
 //класс сервера api
 public class HttpTaskServer {
     private static FileBackedTasksManager manager = (FileBackedTasksManager) Managers.getRestorableManagerForTests();
-    private static Gson gson = new Gson();
+    public static Gson gson = new Gson();
     private static final int PORT = 8080;
     public HttpServer httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
 

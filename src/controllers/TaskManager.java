@@ -62,4 +62,7 @@ public interface TaskManager {
 
     //проверка пересечения по времени
     boolean canSaveTaskInSortSet(TaskBase task);
+
+    //Возвращение списка всех задач, подзадач и эпиков
+    List<TaskBase> getAllTasks();
 }

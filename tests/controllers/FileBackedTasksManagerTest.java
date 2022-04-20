@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -15,10 +16,11 @@ import java.util.List;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 //класс для тестирования класса FileBackedTasksManager
 class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> {
 
-    public FileBackedTasksManagerTest() {
+    public FileBackedTasksManagerTest() throws IOException {
         super((FileBackedTasksManager) Managers.getRestorableManagerForTests());
     }
 
@@ -28,7 +30,8 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
     File fileIsEmpty = new File("src/resources/fileIsEmpty.csv");
     File testWithOutHistory = new File("src/resources/testWithOutHistory.csv");
 
-    @Test //тестирование загрузки из файла
+    @Test
+        //тестирование загрузки из файла
     void test20_loadFromFile() {
         FileBackedTasksManager emptyManager = FileBackedTasksManager.loadFromFile(fileIsEmpty);
         assertTrue(emptyManager.history().isEmpty());
@@ -49,10 +52,11 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         assertTrue(historyIsEmpty.isEmpty());
     }
 
-    @Test //тестирование сохранения в файл
+    @Test
+        //тестирование сохранения в файл
     void test21_saveToFile() {
         taskManager.save();
-        compareFiles(fileIsEmpty,taskManager.getFile());
+        compareFiles(fileIsEmpty, taskManager.getFile());
         ZonedDateTime startTime1 = ZonedDateTime.parse("2022-04-10T17:50+03:00[Europe/Moscow]");
         Duration duration = Duration.ofMinutes(30);
         ZonedDateTime startTime2 = startTime1.plusHours(1);
@@ -79,7 +83,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         taskManager.getSubTaskById(7);
         taskManager.getTaskById(1);
         taskManager.getEpicTaskById(4);
-        compareFiles(test,taskManager.getFile());
+        compareFiles(test, taskManager.getFile());
         FileBackedTasksManager managerWithOutHistory = (FileBackedTasksManager) Managers.getRestorableManagerForTests();
         managerWithOutHistory.addTask(task1);
         managerWithOutHistory.addTask(task2);
@@ -88,7 +92,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         managerWithOutHistory.addTask(subTask11);
         managerWithOutHistory.addTask(subTask12);
         managerWithOutHistory.addTask(subTask13);
-        compareFiles(testWithOutHistory,managerWithOutHistory.getFile());
+        compareFiles(testWithOutHistory, managerWithOutHistory.getFile());
 
     }
 

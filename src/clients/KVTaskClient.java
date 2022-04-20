@@ -58,8 +58,8 @@ public class KVTaskClient {
         return response.body();
     }
 
-    private void registration() {
-        URI uri = URI.create(URL + "/registration");
+    public void registration() {
+        URI uri = URI.create(URL + "/register");
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
                 .uri(uri)

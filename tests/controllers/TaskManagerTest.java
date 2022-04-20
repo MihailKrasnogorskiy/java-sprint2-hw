@@ -3,7 +3,9 @@ package controllers;
 import model.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
+import servers.KVServer;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -18,7 +20,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     private  EpicTask epicTask;
     private SubTask subTask;
 
-    public TaskManagerTest(T taskManager) {
+    public TaskManagerTest(T taskManager) throws IOException {
         this.taskManager = taskManager;
     }
 

@@ -1,4 +1,5 @@
 import com.google.gson.Gson;
+import controllers.HTTPTaskManager;
 import controllers.Managers;
 import controllers.TaskManager;
 import model.EpicTask;
@@ -6,6 +7,7 @@ import model.Status;
 import model.SubTask;
 import model.Task;
 import servers.HttpTaskServer;
+import servers.KVServer;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -13,14 +15,12 @@ import java.time.ZonedDateTime;
 
 public class Main {
    static Gson gson = new Gson();
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
 
-   Task task3 = new Task("Задача 2", "тестирование кода 2");
-   String s = gson.toJson(task3);
-        System.out.println(s);
-        Task t = gson.fromJson(s,Task.class);
-        System.out.println(t);
-        HttpTaskServer server = new HttpTaskServer();
+        KVServer server = new KVServer();
+        server.start();
+        HTTPTaskManager manager = new HTTPTaskManager("http://localhost:8078");
+
 
 //        TaskManager manager = Managers.getDefaultTaskManager();
 //        ZonedDateTime startTime1 = ZonedDateTime.now();
@@ -31,7 +31,7 @@ public class Main {
 //        // создание объектов задач, подзадач, эпиков и менеджера
 //        Task task1 = new Task("Задача 1", "тестирование кода 1", duration, startTime2);
 //        Task task2 = new Task("Задача 2", "тестирование кода 2", duration, startTime1);
-//        Task task3 = new Task("Задача 2", "тестирование кода 2");
+        Task task3 = new Task("Задача 2", "тестирование кода 2");
 //        Task task4 = new Task("Задача 2", "тестирование кода 2");
 //        task4.getEndTime();
 ////
@@ -39,7 +39,7 @@ public class Main {
 ////       EpicTask epic2 = new EpicTask("эпик 2", "что-то большое сложное 2");
 ////        manager.addTask(task1);
 ////        manager.addTask(task2);
-////        manager.addTask(task3);
+        manager.addTask(task3);
 ////        manager.addTask(task4);
 ////        System.out.println(manager.getSortTask());
 ////        manager.removeById(2);
