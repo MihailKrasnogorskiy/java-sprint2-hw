@@ -7,7 +7,7 @@ import com.google.gson.JsonParser;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import controllers.FileBackedTasksManager;
+import controllers.HTTPTaskManager;
 import controllers.Managers;
 import model.EpicTask;
 import model.SubTask;
@@ -19,9 +19,19 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
+
 //класс сервера api
 public class HttpTaskServer {
-    private static FileBackedTasksManager manager = (FileBackedTasksManager) Managers.getRestorableManagerForTests();
+    private static HTTPTaskManager manager;
+
+    static {
+        try {
+            manager = Managers.getHTTPTaskManager();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static Gson gson = new Gson();
     private static final int PORT = 8080;
     public HttpServer httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
@@ -88,44 +98,52 @@ public class HttpTaskServer {
                     httpExchange.sendResponseHeaders(200, 0);
                     break;
                 case "POST":
-                    InputStream inputStream = httpExchange.getRequestBody();
-                    String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-                    if (id == -1) {
-                        //сохраняем задачу
-                        manager.addTask(tasksDeserialization(body));
+                    if (splitPath.length == 2) {
+                        httpExchange.sendResponseHeaders(400, 0);
                     } else {
-                        //обновляем задачу
-                        manager.updateTask(id, tasksDeserialization(body));
+                        InputStream inputStream = httpExchange.getRequestBody();
+                        String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+                        if (id == -1) {
+                            //сохраняем задачу
+                            manager.addTask(tasksDeserialization(body));
+                        } else {
+                            //обновляем задачу
+                            manager.updateTask(id, tasksDeserialization(body));
+                        }
+                        httpExchange.sendResponseHeaders(200, 0);
                     }
-                    httpExchange.sendResponseHeaders(200, 0);
                     break;
                 case "DELETE":
-                    if (id == -1) {
-                        switch (splitPath[2]) {
-                            case "task":
-                                //удаляем все задачи
-                                manager.removeAllTask();
-                                break;
-                            case "subtask":
-                                //удаляем все подзадачи
-                                manager.removeAllSubTask();
-                                break;
-                            case "epic":
-                                //удаляем все эпики
-                                manager.removeAllEpic();
-                                break;
-                            default:
-                                httpExchange.sendResponseHeaders(400, 0);
-                                throw new IllegalArgumentException("unregistered endpoint");
-                        }
+                    if (splitPath.length == 2) {
+                        httpExchange.sendResponseHeaders(400, 0);
                     } else {
-                        //удаляем задачу по id
-                        if (manager.removeById(id)) {
-                            response = "Задача " + id + " удалена";
-                            httpExchange.sendResponseHeaders(200, 0);
+                        if (id == -1) {
+                            switch (splitPath[2]) {
+                                case "task":
+                                    //удаляем все задачи
+                                    manager.removeAllTask();
+                                    break;
+                                case "subtask":
+                                    //удаляем все подзадачи
+                                    manager.removeAllSubTask();
+                                    break;
+                                case "epic":
+                                    //удаляем все эпики
+                                    manager.removeAllEpic();
+                                    break;
+                                default:
+                                    httpExchange.sendResponseHeaders(400, 0);
+                                    throw new IllegalArgumentException("unregistered endpoint");
+                            }
                         } else {
-                            httpExchange.sendResponseHeaders(400, 0);
-                            throw new IllegalArgumentException("id not found");
+                            //удаляем задачу по id
+                            if (manager.removeById(id)) {
+                                response = "Задача " + id + " удалена";
+                                httpExchange.sendResponseHeaders(200, 0);
+                            } else {
+                                httpExchange.sendResponseHeaders(400, 0);
+                                throw new IllegalArgumentException("id not found");
+                            }
                         }
                     }
                     break;

@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,11 +58,11 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
     void test21_saveToFile() {
         taskManager.save();
         compareFiles(fileIsEmpty, taskManager.getFile());
-        ZonedDateTime startTime1 = ZonedDateTime.parse("2022-04-10T17:50+03:00[Europe/Moscow]");
+        LocalDateTime startTime1 = LocalDateTime.parse("2022-04-10T17:50");
         Duration duration = Duration.ofMinutes(30);
-        ZonedDateTime startTime2 = startTime1.plusHours(1);
-        ZonedDateTime startTime3 = startTime2.plusHours(1);
-        ZonedDateTime startTime4 = startTime3.plusHours(1);
+        LocalDateTime startTime2 = startTime1.plusHours(1);
+        LocalDateTime startTime3 = startTime2.plusHours(1);
+        LocalDateTime startTime4 = startTime3.plusHours(1);
         // создание объектов задач, подзадач, эпиков и менеджера
         Task task1 = new Task("Задача 1", "тестирование кода 1", duration, startTime1);
         Task task2 = new Task("Задача 2", "тестирование кода 2", duration, startTime2);

@@ -34,19 +34,27 @@ public class HTTPTaskManager extends FileBackedTasksManager {
         List<TaskBase> list = getAllTasks();
         StringBuilder Ids = new StringBuilder();
         StringBuilder history = new StringBuilder();
-        for (TaskBase task : list) {
-            Ids.append(task.getId());
-            Ids.append(",");
+        if (!list.isEmpty()) {
+            for (TaskBase task : list) {
+                Ids.append(task.getId());
+                Ids.append(",");
+                try {
+                    client.put(String.valueOf(task.getId()), gson.toJson(task));
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
             try {
-                client.put(String.valueOf(task.getId()), gson.toJson(task));
+                client.put(KEY_TASKS_META_DATA, Ids.toString());
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
-        }
-        try {
-            client.put(KEY_TASKS_META_DATA, Ids.toString());
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+        } else {
+            try {
+                client.put(KEY_TASKS_META_DATA, "isEmpty");
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         if (!history().isEmpty()) {
             for (TaskBase taskBase : history()) {
@@ -58,6 +66,12 @@ public class HTTPTaskManager extends FileBackedTasksManager {
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
+        } else {
+            try {
+                client.put(KEY_HISTORY, "isEmpty");
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
     }
@@ -66,7 +80,7 @@ public class HTTPTaskManager extends FileBackedTasksManager {
         HTTPTaskManager manager = new HTTPTaskManager(url);
         KVTaskClient client = manager.getClient();
         String ids = client.load(manager.KEY_TASKS_META_DATA);
-        if (ids != null) {
+        if (!ids.equals("isEmpty")) {
             String[] tasksArray = ids.split(",");
             String[] tasks = new String[tasksArray.length];
             for (int i = 0; i < tasksArray.length; i++) {
@@ -78,7 +92,7 @@ public class HTTPTaskManager extends FileBackedTasksManager {
         }
 
         String historyLine = client.load(manager.KEY_HISTORY);
-        if (historyLine != null) {
+        if (!historyLine.equals("isEmpty")) {
             String[] history = historyLine.split(",");
             Arrays.stream(history)
                     .forEach(id -> manager.restoreTasksInHistoryById((Integer.parseInt(id))));

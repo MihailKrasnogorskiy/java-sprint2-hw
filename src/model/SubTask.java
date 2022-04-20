@@ -1,6 +1,7 @@
 package model;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.Objects;
 
@@ -19,7 +20,7 @@ public class SubTask extends TaskBase {
         this.epic = epic;
     }
 
-    public SubTask(String name, String description, int epic, Duration duration, ZonedDateTime startTime) {
+    public SubTask(String name, String description, int epic, Duration duration, LocalDateTime startTime) {
         super(name, description);
         this.epic = epic;
         this.duration = duration;
@@ -31,7 +32,7 @@ public class SubTask extends TaskBase {
         this.duration = duration;
     }
 
-    public void setStartTime(ZonedDateTime startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 

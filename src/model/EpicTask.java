@@ -1,6 +1,7 @@
 package model;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -90,8 +91,8 @@ public class EpicTask extends TaskBase {
     @Override
     public Duration getDuration() {
         if (!subTasks.isEmpty()) {
-            ZonedDateTime minStartTime = subTasks.get(0).getStartTime();
-            ZonedDateTime maxEndTIme = subTasks.get(0).getEndTime();
+            LocalDateTime minStartTime = subTasks.get(0).getStartTime();
+            LocalDateTime maxEndTIme = subTasks.get(0).getEndTime();
 
             for (SubTask subTask : subTasks) {
                 if (subTask.getStartTime() == null || subTask.getEndTime() == null) {
@@ -113,7 +114,7 @@ public class EpicTask extends TaskBase {
     }
 
     @Override
-    public ZonedDateTime getEndTime() {
+    public LocalDateTime getEndTime() {
         return endTime;
     }
 }

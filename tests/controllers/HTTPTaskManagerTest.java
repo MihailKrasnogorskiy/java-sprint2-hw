@@ -8,25 +8,25 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class HTTPTaskManagerTest extends TaskManagerTest {
     public HTTPTaskManagerTest() throws IOException, InterruptedException {
-        super(new HTTPTaskManager("http://localhost:8078"));
+        super(Managers.getHTTPTaskManager());
     }
 
     @Test
-    void saveAndload() throws IOException, InterruptedException {
-        ZonedDateTime startTime1 = ZonedDateTime.parse("2022-04-10T17:50+03:00[Europe/Moscow]");
+    void test22_saveAndLoad() throws IOException, InterruptedException {
+        LocalDateTime startTime1 = LocalDateTime.parse("2022-04-10T17:50");
         Duration duration = Duration.ofMinutes(30);
-        ZonedDateTime startTime2 = startTime1.plusHours(1);
-        ZonedDateTime startTime3 = startTime2.plusHours(1);
-        ZonedDateTime startTime4 = startTime3.plusHours(1);
+        LocalDateTime startTime2 = startTime1.plusHours(1);
+        LocalDateTime startTime3 = startTime2.plusHours(1);
+        LocalDateTime startTime4 = startTime3.plusHours(1);
         // создание объектов задач, подзадач, эпиков и менеджера
-        Task task1 = new Task("Задача 1", "тестирование кода 1");
+        Task task1 = new Task("Задача 1", "тестирование кода 1",duration,startTime1);
         Task task2 = new Task("Задача 2", "тестирование кода 2");
         EpicTask epic1 = new EpicTask("эпик 1", "что-то большое сложное 1");
         EpicTask epic2 = new EpicTask("эпик 2", "что-то большое сложное 2");
@@ -48,15 +48,4 @@ class HTTPTaskManagerTest extends TaskManagerTest {
         assertEquals(list.get(0).toString(),taskManager1.getAllTasks().get(0).toString());
         assertEquals(history.get(0).toString(),taskManager1.history().get(0).toString());
     }
-//    @BeforeEach
-//    void start() throws IOException {
-//      server = new KVServer();
-//        server.start();
-//        ((HTTPTaskManager) taskManager).getClient().registration();
-//    }
-//
-//    @AfterEach
-//    void stop(){
-//      server.stop();
-//    }
 }

@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             } else task.setDuration(Duration.parse(split[6]));
             if (split[5].equals("null")) {
                 task.setStartTime(null);
-            } else task.setStartTime(ZonedDateTime.parse(split[5]));
+            } else task.setStartTime(LocalDateTime.parse(split[5]));
             return task;
         } else if (split[1].equals(TaskType.EPIC.toString())) {
             return new EpicTask(split[2], split[4], Integer.parseInt(split[0]), statusFromString(split[3]));
@@ -45,7 +46,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             } else subTask.setDuration(Duration.parse(split[7]));
             if (split[6].equals("null")) {
                 subTask.setStartTime(null);
-            } else subTask.setStartTime(ZonedDateTime.parse(split[6]));
+            } else subTask.setStartTime(LocalDateTime.parse(split[6]));
             return subTask;
         }
     }
