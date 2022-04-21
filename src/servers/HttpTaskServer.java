@@ -45,6 +45,10 @@ public class HttpTaskServer {
     public HttpTaskServer() throws IOException {
     }
 
+    public void stop() {
+        httpServer.stop(0);
+    }
+
     private static class TaskHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange httpExchange) throws IOException {
@@ -103,12 +107,17 @@ public class HttpTaskServer {
                     } else {
                         InputStream inputStream = httpExchange.getRequestBody();
                         String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-                        if (id == -1) {
-                            //сохраняем задачу
-                            manager.addTask(tasksDeserialization(body));
-                        } else {
-                            //обновляем задачу
-                            manager.updateTask(id, tasksDeserialization(body));
+                        try {
+                            if (id == -1) {
+                                //сохраняем задачу
+                                manager.addTask(tasksDeserialization(body));
+                            } else {
+                                //обновляем задачу
+                                manager.updateTask(id, tasksDeserialization(body));
+                            }
+                        } catch (IllegalArgumentException e) {
+                            httpExchange.sendResponseHeaders(400, 0);
+                            break;
                         }
                         httpExchange.sendResponseHeaders(200, 0);
                     }
@@ -160,14 +169,22 @@ public class HttpTaskServer {
 
         private static TaskBase tasksDeserialization(String body) {
             JsonElement jsonElement = JsonParser.parseString(body);
+            if (!jsonElement.isJsonObject()) {
+                throw new IllegalArgumentException("request body is not json object");
+            }
             JsonObject jsonObject = jsonElement.getAsJsonObject();
             String type = jsonObject.get("TYPE").getAsString();
-            if (type.equals("TASK")) {
-                return gson.fromJson(body, Task.class);
-            } else if (type.equals("SUBTASK")) {
-                return gson.fromJson(body, SubTask.class);
-            } else {
-                return gson.fromJson(body, EpicTask.class);
+            switch (type) {
+                case "TASK":
+                    return gson.fromJson(body, Task.class);
+                case "SUBTASK":
+                    TaskBase tb = gson.fromJson(body, SubTask.class);
+                    System.out.println("подзадача обработана");
+                    return tb;
+                case "EPIC":
+                    return gson.fromJson(body, EpicTask.class);
+                default:
+                    throw new IllegalArgumentException("request body is not tasks");
             }
         }
     }

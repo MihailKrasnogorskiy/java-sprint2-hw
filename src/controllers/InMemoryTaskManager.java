@@ -41,8 +41,11 @@ public class InMemoryTaskManager implements TaskManager {
             id++;
             task.setId(id);
             taskDate.getSubTaskMap().put(id, (SubTask) task);
+            System.out.println("сохранена в мапе");
             taskDate.getEpicTaskMap().get(((SubTask) task).getEpic()).addSubTask((SubTask) task);
+            System.out.println("сохранена в эпике");
             taskDate.getSortTasks().add(task);
+            System.out.println("сохранена в дереве");
             return;
         }
         if (task instanceof Task) {
