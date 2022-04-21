@@ -177,16 +177,17 @@ class HttpTaskServerTest {
         assertEquals(jsonEpic, response.body());
         assertEquals(200, response.statusCode());
 
-        SubTask subTask11 = new SubTask("подзадача 1.1", "что-то маленькое и лёгкое 1.1", epic2.getId(),
-                duration,startTime2);
+        SubTask subTask11 = new SubTask("подзадача 1.1", "что-то маленькое и лёгкое 1.1", 2);
         System.out.println(gson.toJson(subTask11));
         HttpRequest request9 = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(subTask11)))
                 .uri(URI.create(URL + "/subtask"))
                 .version(HttpClient.Version.HTTP_1_1)
                 .build();
-
-        response = client.send(request9, handler);
+try{
+        response = client.send(request9, handler);} catch (Throwable e){
+    e.printStackTrace();
+}
         assertEquals(200, response.statusCode());
 
         HttpRequest request10 = HttpRequest.newBuilder()

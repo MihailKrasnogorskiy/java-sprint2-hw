@@ -9,6 +9,7 @@ import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import controllers.HTTPTaskManager;
 import controllers.Managers;
+import controllers.TaskManager;
 import model.EpicTask;
 import model.SubTask;
 import model.Task;
@@ -22,14 +23,14 @@ import java.nio.charset.StandardCharsets;
 
 //класс сервера api
 public class HttpTaskServer {
-    private static HTTPTaskManager manager;
+    private static TaskManager manager;
 
     static {
-        try {
-            manager = Managers.getHTTPTaskManager();
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+          manager = Managers.getDefaultTaskManager();
+//        } catch (IOException | InterruptedException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public static Gson gson = new Gson();
@@ -96,6 +97,7 @@ public class HttpTaskServer {
                                 throw new IllegalArgumentException("unregistered endpoint");
                             }
                         } else {
+                            System.out.println(manager.getAnyTaskByID(id));
                             response = gson.toJson(manager.getAnyTaskByID(id));
                         }
                     }
@@ -105,9 +107,9 @@ public class HttpTaskServer {
                     if (splitPath.length == 2) {
                         httpExchange.sendResponseHeaders(400, 0);
                     } else {
+                        try{
                         InputStream inputStream = httpExchange.getRequestBody();
                         String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-                        try {
                             if (id == -1) {
                                 //сохраняем задачу
                                 manager.addTask(tasksDeserialization(body));
@@ -115,7 +117,8 @@ public class HttpTaskServer {
                                 //обновляем задачу
                                 manager.updateTask(id, tasksDeserialization(body));
                             }
-                        } catch (IllegalArgumentException e) {
+                        } catch (Throwable e) {
+                            System.out.println(e);
                             httpExchange.sendResponseHeaders(400, 0);
                             break;
                         }
@@ -178,9 +181,7 @@ public class HttpTaskServer {
                 case "TASK":
                     return gson.fromJson(body, Task.class);
                 case "SUBTASK":
-                    TaskBase tb = gson.fromJson(body, SubTask.class);
-                    System.out.println("подзадача обработана");
-                    return tb;
+                     return gson.fromJson(body, SubTask.class);
                 case "EPIC":
                     return gson.fromJson(body, EpicTask.class);
                 default:
