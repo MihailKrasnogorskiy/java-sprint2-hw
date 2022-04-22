@@ -2,9 +2,9 @@ package date;
 
 //класс узла списка
 public class Node<E> {
+    private final E date;
     private Node<E> prev;
     private Node<E> next;
-    private final E date;
 
     public Node(E e) {
         this.date = e;

@@ -22,9 +22,6 @@ class HTTPTaskManagerTest extends TaskManagerTest {
     void test22_saveAndLoad() throws IOException, InterruptedException {
         LocalDateTime startTime1 = LocalDateTime.parse("2022-04-10T17:50");
         Duration duration = Duration.ofMinutes(30);
-        LocalDateTime startTime2 = startTime1.plusHours(1);
-        LocalDateTime startTime3 = startTime2.plusHours(1);
-        LocalDateTime startTime4 = startTime3.plusHours(1);
         // создание объектов задач, подзадач, эпиков и менеджера
         Task task1 = new Task("Задача 1", "тестирование кода 1",duration,startTime1);
         Task task2 = new Task("Задача 2", "тестирование кода 2");

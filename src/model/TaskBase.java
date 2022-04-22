@@ -2,7 +2,6 @@ package model;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 
 // абстрактный класс задачи
 public abstract class TaskBase {

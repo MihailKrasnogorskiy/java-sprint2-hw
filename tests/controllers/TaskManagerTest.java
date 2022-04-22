@@ -62,7 +62,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, new Executable() {
             @Override
-            public void execute() throws Throwable {
+            public void execute() {
                 taskManager.updateTask(0, null);
             }
         });

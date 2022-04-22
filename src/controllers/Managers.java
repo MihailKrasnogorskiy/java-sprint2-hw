@@ -38,12 +38,11 @@ public class Managers {
     public static HTTPTaskManager getHTTPTaskManager() throws IOException, InterruptedException {
         try {
             KVserver.start();
-        }catch (IllegalStateException e){
+        } catch (IllegalStateException e) {
             System.out.println("Server is run");
         }
         return new HTTPTaskManager("http://localhost:8078");
     }
-
 
 
 }

@@ -5,18 +5,20 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+
 //класс http клиента для сервера сохранения
 public class KVTaskClient {
-    private String API_KEY = "?API_KEY=";
     private final String URL;
-    private HttpClient client = HttpClient.newHttpClient();
-    private HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
+    private String API_KEY = "?API_KEY=";
+    private final HttpClient client = HttpClient.newHttpClient();
+    private final HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
 
     public KVTaskClient(String url) throws IOException, InterruptedException {
         URL = url;
         registration();
     }
 
+    //сохранение значения на kv сервер
     public void put(String key, String json) throws IOException, InterruptedException {
         final String SAVE_LINK = URL + "/save/";
         URI uri = URI.create(SAVE_LINK + key + API_KEY);
@@ -34,6 +36,7 @@ public class KVTaskClient {
         }
     }
 
+    //получение значения с kv сервера
     public String load(String key) throws IOException, InterruptedException {
         final String LOAD_LINK = URL + "/load/";
         URI uri = URI.create(LOAD_LINK + key + API_KEY);
@@ -58,6 +61,7 @@ public class KVTaskClient {
         return response.body();
     }
 
+    //регистрацуия на kv сервере
     public void registration() {
         URI uri = URI.create(URL + "/register");
         HttpRequest request = HttpRequest.newBuilder()
@@ -65,7 +69,7 @@ public class KVTaskClient {
                 .uri(uri)
                 .version(HttpClient.Version.HTTP_1_1)
                 .build();
-        HttpResponse<String> response = null;
+        HttpResponse<String> response;
         try {
             response = client.send(request, handler);
         } catch (IOException | InterruptedException e) {

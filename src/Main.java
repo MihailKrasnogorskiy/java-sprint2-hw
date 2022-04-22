@@ -41,11 +41,12 @@ public class Main {
 
         manager.addTask(epic2);
         System.out.println(gson.toJson(epic2));
-                SubTask subTask12 = new SubTask("подзадача 1.2", "что-то маленькое и лёгкое 1.2",
+        SubTask subTask12 = new SubTask("подзадача 1.2", "что-то маленькое и лёгкое 1.2",
                 epic2.getId(), duration, startTime2);
-SubTask subTask11 = gson.fromJson(gson.toJson(subTask12),SubTask.class);
-       manager.addTask(subTask11);
-   //     System.out.println(s1);
+        SubTask subTask11 = gson.fromJson(gson.toJson(subTask12), SubTask.class);
+        manager.addTask(subTask11);
+        System.out.println(gson.toJson(manager.getSortTask()));
+        //     System.out.println(s1);
 ////        manager.addTask(task1);
 ////        manager.addTask(task2);
 //        manager.addTask(task3);

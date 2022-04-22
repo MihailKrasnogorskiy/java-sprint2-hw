@@ -2,12 +2,12 @@ package model;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.Objects;
 
 // класс задачи
 public class Task extends TaskBase {
- private final TaskType TYPE = TaskType.TASK;
+    private final TaskType TYPE = TaskType.TASK;
+
     public Task(String name, String description) {
         super(name, description);
     }
