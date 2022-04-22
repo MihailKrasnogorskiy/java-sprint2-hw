@@ -3,8 +3,11 @@ package controllers;
 import model.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
+import servers.KVServer;
 
+import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -17,13 +20,14 @@ abstract class TaskManagerTest<T extends TaskManager> {
     private Task task = null;
     private  EpicTask epicTask;
     private SubTask subTask;
+    private KVServer server;
 
-    public TaskManagerTest(T taskManager) {
+    public TaskManagerTest(T taskManager) throws IOException {
         this.taskManager = taskManager;
     }
 
     private void createTask() {
-        ZonedDateTime startTime1 = ZonedDateTime.parse("2022-04-10T17:50+03:00[Europe/Moscow]");
+        LocalDateTime startTime1 = LocalDateTime.parse("2022-04-10T17:50");
         Duration duration = Duration.ofMinutes(30);
         task = new Task("Задача 1", "тестирование кода 1", duration, startTime1);
         taskManager.addTask(task);
@@ -58,7 +62,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, new Executable() {
             @Override
-            public void execute() throws Throwable {
+            public void execute() {
                 taskManager.updateTask(0, null);
             }
         });
@@ -184,10 +188,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
     по причине необходимости создания задач последовательно по одной и тестирования работы метода после каждой
     новой задачи*/
     void test23_canSaveTaskInSortSet(){
-        ZonedDateTime startTime1 = ZonedDateTime.parse("2022-04-10T17:50+03:00[Europe/Moscow]");
+        LocalDateTime startTime1 = LocalDateTime.parse("2022-04-10T17:50");
         Duration duration = Duration.ofMinutes(30);
-        ZonedDateTime startTimeIsBefore = startTime1.minusMinutes(20);
-        ZonedDateTime startTimeIsAfter = startTime1.plusMinutes(10);
+        LocalDateTime startTimeIsBefore = startTime1.minusMinutes(20);
+        LocalDateTime startTimeIsAfter = startTime1.plusMinutes(10);
         Duration longDuration = Duration.ofMinutes(100);
         task = new Task("Задача 1", "тестирование кода 1");
         assertTrue(taskManager.canSaveTaskInSortSet(task));

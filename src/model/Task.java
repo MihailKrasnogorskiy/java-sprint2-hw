@@ -1,11 +1,12 @@
 package model;
 
 import java.time.Duration;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 // класс задачи
 public class Task extends TaskBase {
+    private final TaskType TYPE = TaskType.TASK;
 
     public Task(String name, String description) {
         super(name, description);
@@ -15,7 +16,7 @@ public class Task extends TaskBase {
         super(name, description, id, status);
     }
 
-    public Task(String name, String description, Duration duration, ZonedDateTime startTime) {
+    public Task(String name, String description, Duration duration, LocalDateTime startTime) {
         super(name, description);
         this.duration = duration;
         this.startTime = startTime;
@@ -26,7 +27,7 @@ public class Task extends TaskBase {
         this.duration = duration;
     }
 
-    public void setStartTime(ZonedDateTime startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
@@ -45,7 +46,7 @@ public class Task extends TaskBase {
 
     public String toString() {
 
-        return id + "," + TaskType.TASK + "," + name + "," + status + "," + description + ","
+        return id + "," + TYPE + "," + name + "," + status + "," + description + ","
                 + startTime + "," + duration;
     }
 }

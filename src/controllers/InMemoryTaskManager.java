@@ -59,6 +59,20 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
+    public TaskBase getAnyTaskByID(int id) {
+        if (taskDate.getTaskMap().containsKey(id)) {
+            inMemoryHistoryManager.addTask(taskDate.getTaskMap().get(id));
+            return taskDate.getTaskMap().get(id);
+        } else if (taskDate.getSubTaskMap().containsKey(id)) {
+            inMemoryHistoryManager.addTask(taskDate.getSubTaskMap().get(id));
+            return taskDate.getSubTaskMap().get(id);
+        } else if (taskDate.getEpicTaskMap().containsKey(id)) {
+            inMemoryHistoryManager.addTask(taskDate.getEpicTaskMap().get(id));
+            return taskDate.getEpicTaskMap().get(id);
+        }
+        return null;
+    }
+
     @Override
     public Task getTaskById(int id) {
         if (taskDate.getTaskMap().containsKey(id)) {
@@ -157,7 +171,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateTask(int id, TaskBase task) {
-        if (task == null || id == 0) {
+        if (task == null || id == 0 || task.getId() != id) {
             throw new IllegalArgumentException("неверные входные данные");
         }
         if (task instanceof SubTask) {
@@ -220,5 +234,13 @@ public class InMemoryTaskManager implements TaskManager {
             }
         }
         return true;
+    }
+
+    @Override
+    public List<TaskBase> getAllTasks() {
+        List<TaskBase> list = new ArrayList<>(getAllEpicTask());
+        list.addAll(getAllTask());
+        list.addAll(getAllSubTask());
+        return list;
     }
 }

@@ -1,13 +1,13 @@
 package model;
 
 import java.time.Duration;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 
 // класс эпика
 public class EpicTask extends TaskBase {
-
+    private final TaskType TYPE = TaskType.EPIC;
     private final ArrayList<SubTask> subTasks;
 
     public EpicTask(String name, String description) {
@@ -83,18 +83,18 @@ public class EpicTask extends TaskBase {
     @Override
     public String toString() {
 
-        return id + "," + TaskType.EPIC + "," + name + "," + status + "," + description + ","
+        return id + "," + TYPE + "," + name + "," + status + "," + description + ","
                 + startTime + "," + duration;
     }
 
     @Override
     public Duration getDuration() {
         if (!subTasks.isEmpty()) {
-            ZonedDateTime minStartTime = subTasks.get(0).getStartTime();
-            ZonedDateTime maxEndTIme = subTasks.get(0).getEndTime();
+            LocalDateTime minStartTime = subTasks.get(0).getStartTime();
+            LocalDateTime maxEndTIme = subTasks.get(0).getEndTime();
 
             for (SubTask subTask : subTasks) {
-                if (subTask.getEndTime() == null || subTask.getEndTime() == null) {
+                if (subTask.getStartTime() == null || subTask.getEndTime() == null) {
                     continue;
                 }
                 if (subTask.getStartTime().isBefore(minStartTime)) {
@@ -113,7 +113,7 @@ public class EpicTask extends TaskBase {
     }
 
     @Override
-    public ZonedDateTime getEndTime() {
+    public LocalDateTime getEndTime() {
         return endTime;
     }
 }

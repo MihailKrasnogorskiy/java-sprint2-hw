@@ -1,7 +1,7 @@
 package model;
 
 import java.time.Duration;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 // абстрактный класс задачи
 public abstract class TaskBase {
@@ -10,8 +10,8 @@ public abstract class TaskBase {
     int id;
     Status status;
     Duration duration;
-    ZonedDateTime startTime;
-    ZonedDateTime endTime;
+    LocalDateTime startTime;
+    LocalDateTime endTime;
 
     public TaskBase(String name, String description) {
         this.name = name;
@@ -30,7 +30,7 @@ public abstract class TaskBase {
         return duration;
     }
 
-    public ZonedDateTime getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 
@@ -78,7 +78,7 @@ public abstract class TaskBase {
         return hash + id;
     }
 
-    public ZonedDateTime getEndTime() {
+    public LocalDateTime getEndTime() {
         if (startTime == null) {
             endTime = null;
             return endTime;
