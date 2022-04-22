@@ -83,10 +83,9 @@ class HttpTaskServerTest {
     }
 
     @Test
-    void Test24_taskResponsePOST() throws IOException, InterruptedException {
+    void Test24_taskResponsePOSTAndDELITE() throws IOException, InterruptedException {
         LocalDateTime startTime1 = LocalDateTime.MIN;
         Duration duration = Duration.ofMinutes(30);
-        LocalDateTime startTime2 = startTime1.plusHours(1);
         Task task1 = new Task("Задача 1", "тестирование кода 1", duration, startTime1);
         URI uri = URI.create(URL + "/task");
         HttpRequest request = HttpRequest.newBuilder()
@@ -138,7 +137,6 @@ class HttpTaskServerTest {
         response = client.send(request4, handler);
         assertEquals(400, response.statusCode());
 
-        System.out.println(task2);
         HttpRequest request5 = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(task2)))
                 .uri(URI.create(URL + "/task/?id=1"))
@@ -178,16 +176,12 @@ class HttpTaskServerTest {
         assertEquals(200, response.statusCode());
 
         SubTask subTask11 = new SubTask("подзадача 1.1", "что-то маленькое и лёгкое 1.1", 2);
-        System.out.println(gson.toJson(subTask11));
         HttpRequest request9 = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(subTask11)))
                 .uri(URI.create(URL + "/subtask"))
                 .version(HttpClient.Version.HTTP_1_1)
                 .build();
-try{
-        response = client.send(request9, handler);} catch (Throwable e){
-    e.printStackTrace();
-}
+        response = client.send(request9, handler);
         assertEquals(200, response.statusCode());
 
         HttpRequest request10 = HttpRequest.newBuilder()
@@ -206,6 +200,42 @@ try{
         response = client.send(request11, handler);
         assertEquals(jsonEpic1, response.body());
         assertEquals(200, response.statusCode());
+
+//        HttpRequest request15 = HttpRequest.newBuilder()
+//                .GET()
+//                .uri(uri)
+//                .version(HttpClient.Version.HTTP_1_1)
+//                .build();
+//        response = client.send(request15, handler);
+//
+//        assertEquals("[]", response.body());
+
+
+        HttpRequest request12 = HttpRequest.newBuilder()
+                .DELETE()
+                .uri(URI.create(URL + "/epic"))
+                .version(HttpClient.Version.HTTP_1_1)
+                .build();
+        response = client.send(request12, handler);
+        assertEquals(200, response.statusCode());
+
+        HttpRequest request13 = HttpRequest.newBuilder()
+                .DELETE()
+                .uri(URI.create(URL + "/task/?id=1"))
+                .version(HttpClient.Version.HTTP_1_1)
+                .build();
+        response = client.send(request13, handler);
+        assertEquals(200, response.statusCode());
+
+        HttpRequest request14 = HttpRequest.newBuilder()
+                .GET()
+                .uri(uri)
+                .version(HttpClient.Version.HTTP_1_1)
+                .build();
+                response = client.send(request14, handler);
+
+        assertEquals("[]", response.body());
+
     }
 
     @BeforeEach

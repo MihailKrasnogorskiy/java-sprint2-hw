@@ -7,7 +7,6 @@ import com.google.gson.JsonParser;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import controllers.HTTPTaskManager;
 import controllers.Managers;
 import controllers.TaskManager;
 import model.EpicTask;
@@ -26,11 +25,11 @@ public class HttpTaskServer {
     private static TaskManager manager;
 
     static {
-//        try {
-          manager = Managers.getDefaultTaskManager();
-//        } catch (IOException | InterruptedException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            manager = Managers.getHTTPTaskManager();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public static Gson gson = new Gson();
@@ -97,7 +96,6 @@ public class HttpTaskServer {
                                 throw new IllegalArgumentException("unregistered endpoint");
                             }
                         } else {
-                            System.out.println(manager.getAnyTaskByID(id));
                             response = gson.toJson(manager.getAnyTaskByID(id));
                         }
                     }
@@ -107,9 +105,9 @@ public class HttpTaskServer {
                     if (splitPath.length == 2) {
                         httpExchange.sendResponseHeaders(400, 0);
                     } else {
-                        try{
-                        InputStream inputStream = httpExchange.getRequestBody();
-                        String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+                        try {
+                            InputStream inputStream = httpExchange.getRequestBody();
+                            String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
                             if (id == -1) {
                                 //сохраняем задачу
                                 manager.addTask(tasksDeserialization(body));
@@ -117,8 +115,7 @@ public class HttpTaskServer {
                                 //обновляем задачу
                                 manager.updateTask(id, tasksDeserialization(body));
                             }
-                        } catch (Throwable e) {
-                            System.out.println(e);
+                        } catch (IllegalArgumentException e) {
                             httpExchange.sendResponseHeaders(400, 0);
                             break;
                         }
@@ -130,23 +127,17 @@ public class HttpTaskServer {
                         httpExchange.sendResponseHeaders(400, 0);
                     } else {
                         if (id == -1) {
-                            switch (splitPath[2]) {
-                                case "task":
-                                    //удаляем все задачи
-                                    manager.removeAllTask();
-                                    break;
-                                case "subtask":
-                                    //удаляем все подзадачи
-                                    manager.removeAllSubTask();
-                                    break;
-                                case "epic":
-                                    //удаляем все эпики
-                                    manager.removeAllEpic();
-                                    break;
-                                default:
-                                    httpExchange.sendResponseHeaders(400, 0);
-                                    throw new IllegalArgumentException("unregistered endpoint");
+                            if ("task".equals(splitPath[2])) {//удаляем все задачи
+                                manager.removeAllTask();
+                            } else if ("subtask".equals(splitPath[2])) {//удаляем все подзадачи
+                                manager.removeAllSubTask();
+                            } else if (splitPath[2].equals("epic")) {//удаляем все эпики
+                                manager.removeAllEpic();
+                            } else {
+                                httpExchange.sendResponseHeaders(400, 0);
+                                throw new IllegalArgumentException("unregistered endpoint");
                             }
+                            httpExchange.sendResponseHeaders(200, 0);
                         } else {
                             //удаляем задачу по id
                             if (manager.removeById(id)) {
@@ -181,7 +172,7 @@ public class HttpTaskServer {
                 case "TASK":
                     return gson.fromJson(body, Task.class);
                 case "SUBTASK":
-                     return gson.fromJson(body, SubTask.class);
+                    return gson.fromJson(body, SubTask.class);
                 case "EPIC":
                     return gson.fromJson(body, EpicTask.class);
                 default:
