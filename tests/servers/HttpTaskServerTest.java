@@ -97,6 +97,7 @@ class HttpTaskServerTest {
         Duration duration = Duration.ofMinutes(30);
         Task task1 = new Task("Задача 1", "тестирование кода 1", duration, startTime1);
         URI uri = URI.create(URL + "/task");
+
         //сохранение задачи1 на сервер
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(task1)))
@@ -107,6 +108,7 @@ class HttpTaskServerTest {
 
         response = client.send(request, handler);
         assertEquals(200, response.statusCode());
+
         //получение списка всех задач с сервера
         HttpRequest request1 = HttpRequest.newBuilder()
                 .GET()
@@ -115,6 +117,7 @@ class HttpTaskServerTest {
                 .build();
         response = client.send(request1, handler);
         assertEquals("[" + jsonTask + "]", response.body());
+
         //сохранение некорректной строки на сервер
         HttpRequest request2 = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString("test"))
@@ -176,6 +179,7 @@ class HttpTaskServerTest {
 
         response = client.send(request7, handler);
         assertEquals(200, response.statusCode());
+
         //получение эпика
         HttpRequest request8 = HttpRequest.newBuilder()
                 .GET()
@@ -230,7 +234,8 @@ class HttpTaskServerTest {
         response = client.send(request16, handler);
 
         assertEquals(jsonStory, response.body());
-        //получение id пика по id подзадачи
+
+        //получение id эпика по id подзадачи
         HttpRequest request18 = HttpRequest.newBuilder()
                 .GET()
                 .uri(URI.create(URL + "/subtask/epic/?id=3"))
@@ -239,7 +244,8 @@ class HttpTaskServerTest {
         response = client.send(request18, handler);
         assertEquals("2", response.body());
         assertEquals(200, response.statusCode());
-        //получение id пика по id подзадачи
+
+        //получение id эпика по id подзадачи
         HttpRequest request19 = HttpRequest.newBuilder()
                 .GET()
                 .uri(URI.create(URL + "/epic/subtasks/?id=2"))
@@ -248,6 +254,7 @@ class HttpTaskServerTest {
         response = client.send(request19, handler);
         assertEquals("[" + jsonSubTask + "]", response.body());
         assertEquals(200, response.statusCode());
+
         //удаление всех эпиков
         HttpRequest request12 = HttpRequest.newBuilder()
                 .DELETE()
@@ -256,6 +263,7 @@ class HttpTaskServerTest {
                 .build();
         response = client.send(request12, handler);
         assertEquals(200, response.statusCode());
+
         //удаление задачи по id
         HttpRequest request13 = HttpRequest.newBuilder()
                 .DELETE()
@@ -264,6 +272,7 @@ class HttpTaskServerTest {
                 .build();
         response = client.send(request13, handler);
         assertEquals(200, response.statusCode());
+
         //получение приоритезированного списка задач
         HttpRequest request14 = HttpRequest.newBuilder()
                 .GET()
@@ -271,6 +280,7 @@ class HttpTaskServerTest {
                 .version(HttpClient.Version.HTTP_1_1)
                 .build();
         response = client.send(request14, handler);
+
         //получение истории
         assertEquals("[]", response.body());
 
